@@ -89,6 +89,29 @@ body {
 .filter-chip.active { background: var(--navy); color: #fff; border-color: var(--navy); }
 .filter-count { font-size: 12px; color: var(--text-muted); margin-left: auto; font-family: 'JetBrains Mono', monospace; }
 
+.toggle-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  margin-left: 8px;
+}
+
+.toggle-wrap input[type="checkbox"] {
+  width: 14px;
+  height: 14px;
+  accent-color: var(--navy);
+  cursor: pointer;
+}
+
+.toggle-label {
+  font-size: 12px;
+  color: var(--text-secondary);
+  font-weight: 500;
+  white-space: nowrap;
+  user-select: none;
+}
+
 .wo-table-wrap { background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow); overflow: auto; max-height: calc(100vh - var(--topbar-h) - 160px); }
 .wo-table { width: 100%; border-collapse: collapse; }
 .wo-table thead th { padding: 11px 14px; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.6px; color: var(--text-muted); text-align: left; background: var(--surface-alt); border-bottom: 2px solid var(--border); position: sticky; top: 0; z-index: 10; white-space: nowrap; cursor: pointer; user-select: none; }
@@ -415,7 +438,7 @@ body {
 <!-- Revenue Pipeline - 3 visible, scroll right for more -->
 <div class="cal-section" id="calSection">
   <div class="cal-header">
-    <div class="cal-title">Revenue Pipeline <span class="cal-subtitle">by Delivery Deadline</span></div>
+    <div class="cal-title">Revenue Pipeline <span class="cal-subtitle">by Production Deadline</span></div>
     <div class="cal-total" id="calTotal"></div>
   </div>
   <div class="cal-scroll-wrap">
@@ -442,6 +465,7 @@ body {
     <button class="filter-chip" data-filter="overdue" onclick="setFilter(this)">Overdue</button>
     <button class="filter-chip" data-filter="urgent" onclick="setFilter(this)">≤7 Days</button>
     <button class="filter-chip" data-filter="on-track" onclick="setFilter(this)">On Track</button>
+    <label class="toggle-wrap"><input type="checkbox" id="hideInternal" checked onchange="onToggleInternal()"><span class="toggle-label">Hide AM Craft internal</span></label>
     <div class="filter-count" id="filterCount"></div>
   </div>
   <div id="mainTableArea">
@@ -584,11 +608,14 @@ function renderCalendar() {
 
   // Build date->revenue map
   calDateMap = {};
+  var hi = hideInternal();
   allWorkOrders.forEach(function(wo) {
-    if (!wo.deliveryDeadline || wo.deliveryDeadline === 'TBA' || wo.deliveryDeadline === '') return;
+    if (hi && isInternalWO(wo)) return;
+    var dd = wo.productionDeadline;
+    if (!dd || dd === 'TBA' || dd === '') return;
     var amt = parseFloat(wo.amount) || 0;
     if (amt <= 0) return;
-    var key = wo.deliveryDeadline;
+    var key = dd;
     if (!calDateMap[key]) calDateMap[key] = { amount: 0, wos: [] };
     calDateMap[key].amount += amt;
     calDateMap[key].wos.push({ wo: wo.wo, customer: wo.customer, amount: amt });
@@ -740,8 +767,10 @@ function loadWorkOrders() {
 }
 
 function updateKPIs() {
-  var n = allWorkOrders.length, ov = 0, ur = 0, tp = 0, scrapSum = 0, scrapCount = 0, tv = 0;
-  allWorkOrders.forEach(function(wo) {
+  var hi = hideInternal();
+  var filtered = allWorkOrders.filter(function(wo) { return !(hi && isInternalWO(wo)); });
+  var n = filtered.length, ov = 0, ur = 0, tp = 0, scrapSum = 0, scrapCount = 0, tv = 0;
+  filtered.forEach(function(wo) {
     var d = parseFloat(wo.daysUntilDeadline);
     if (!isNaN(d) && d < 0) ov++;
     if (!isNaN(d) && d >= 0 && d <= 7) ur++;
@@ -927,9 +956,19 @@ function renderPart(d) {
 function closePartModal(){document.getElementById('partModalOverlay').classList.remove('active');}
 
 // ============ FILTER/SORT ============
+function isInternalWO(wo) {
+  return wo.customer && wo.customer.toLowerCase().indexOf('am craft') !== -1;
+}
+
+function hideInternal() {
+  return document.getElementById('hideInternal').checked;
+}
+
 function getFilteredData() {
   var q = document.getElementById('searchInput').value.toLowerCase().trim();
+  var hi = hideInternal();
   return allWorkOrders.filter(function(wo) {
+    if (hi && isInternalWO(wo)) return false;
     if (currentFilter!=='all') {
       var d = parseFloat(wo.daysUntilDeadline);
       if (currentFilter==='overdue'&&(isNaN(d)||d>=0)) return false;
@@ -940,6 +979,13 @@ function getFilteredData() {
     return true;
   });
 }
+
+function onToggleInternal() {
+  updateKPIs();
+  renderCalendar();
+  renderTable();
+}
+
 function setFilter(el){document.querySelectorAll('.filter-chip').forEach(function(c){c.classList.remove('active')});el.classList.add('active');currentFilter=el.getAttribute('data-filter');renderTable();}
 function filterTable(){renderTable();}
 function toggleSort(c){if(sortCol===c)sortAsc=!sortAsc;else{sortCol=c;sortAsc=true;}renderTable();}
