@@ -231,8 +231,9 @@ body {
   border-radius: var(--radius-sm);
   overflow: hidden;
   flex-shrink: 0;
-  width: calc((100% - 24px) / 3);
-  min-width: 320px;
+  width: calc((100vw - 80px) / 3);
+  min-width: 300px;
+  max-width: 450px;
 }
 
 .cal-month.current {
@@ -411,7 +412,7 @@ body {
 </div>
 <div class="topbar-spacer"></div>
 
-<!-- Revenue Pipeline - horizontal scroll -->
+<!-- Revenue Pipeline - 3 visible, scroll right for more -->
 <div class="cal-section" id="calSection">
   <div class="cal-header">
     <div class="cal-title">Revenue Pipeline <span class="cal-subtitle">by Delivery Deadline</span></div>
