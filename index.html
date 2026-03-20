@@ -7,12 +7,6 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-/* ============================================================
-   AM-CRAFT PRODUCTION DASHBOARD — Styles
-   Navy: #0E1165  Accent: #3B82F6  Success: #10B981  
-   Warning: #F59E0B  Danger: #EF4444
-   ============================================================ */
-
 :root {
   --navy: #0E1165;
   --navy-light: #1a1d7a;
@@ -40,10 +34,9 @@
   --shadow: 0 4px 16px rgba(14,17,101,0.08);
   --shadow-lg: 0 8px 32px rgba(14,17,101,0.12);
   --transition: 0.2s cubic-bezier(0.4,0,0.2,1);
+  --topbar-h: 56px;
 }
-
 * { margin: 0; padding: 0; box-sizing: border-box; }
-
 body {
   font-family: 'DM Sans', -apple-system, sans-serif;
   background: var(--surface-alt);
@@ -52,681 +45,151 @@ body {
   overflow-x: hidden;
 }
 
-/* --- TOP BAR --- */
 .topbar {
   background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
   padding: 0 32px;
-  height: 64px;
+  height: var(--topbar-h);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  position: sticky;
-  top: 0;
+  position: fixed; top: 0; left: 0; right: 0;
   z-index: 100;
   box-shadow: 0 2px 16px rgba(14,17,101,0.2);
 }
+.topbar-left { display: flex; align-items: center; gap: 16px; }
+.topbar-logo { font-size: 17px; font-weight: 700; color: #fff; letter-spacing: 1.5px; text-transform: uppercase; }
+.topbar-logo span { color: var(--accent-light); font-weight: 400; }
+.topbar-divider { width: 1px; height: 24px; background: rgba(255,255,255,0.2); }
+.topbar-title { font-size: 13px; color: rgba(255,255,255,0.8); font-weight: 500; }
+.topbar-right { display: flex; align-items: center; gap: 16px; }
+.topbar-clock { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: rgba(255,255,255,0.7); }
+.topbar-status { display: flex; align-items: center; gap: 6px; font-size: 12px; color: rgba(255,255,255,0.6); }
+.status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--success); animation: pulse 2s ease-in-out infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+.btn-refresh { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15); color: #fff; padding: 6px 14px; border-radius: var(--radius-sm); font-size: 12px; font-family: inherit; font-weight: 500; cursor: pointer; transition: var(--transition); }
+.btn-refresh:hover { background: rgba(255,255,255,0.2); }
+.topbar-spacer { height: var(--topbar-h); }
 
-.topbar-left {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-.topbar-logo {
-  font-size: 18px;
-  font-weight: 700;
-  color: #fff;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-}
-
-.topbar-logo span {
-  color: var(--accent-light);
-  font-weight: 400;
-}
-
-.topbar-divider {
-  width: 1px;
-  height: 28px;
-  background: rgba(255,255,255,0.2);
-}
-
-.topbar-title {
-  font-size: 14px;
-  color: rgba(255,255,255,0.8);
-  font-weight: 500;
-}
-
-.topbar-right {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-.topbar-clock {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 13px;
-  color: rgba(255,255,255,0.7);
-}
-
-.topbar-status {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 12px;
-  color: rgba(255,255,255,0.6);
-}
-
-.status-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--success);
-  animation: pulse 2s ease-in-out infinite;
-}
-
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.4; }
-}
-
-.btn-refresh {
-  background: rgba(255,255,255,0.1);
-  border: 1px solid rgba(255,255,255,0.15);
-  color: #fff;
-  padding: 6px 14px;
-  border-radius: var(--radius-sm);
-  font-size: 12px;
-  font-family: inherit;
-  font-weight: 500;
-  cursor: pointer;
-  transition: var(--transition);
-}
-
-.btn-refresh:hover {
-  background: rgba(255,255,255,0.2);
-}
-
-/* --- KPI SUMMARY BAR --- */
-.kpi-bar {
-  display: flex;
-  gap: 1px;
-  background: var(--border);
-  border-bottom: 1px solid var(--border);
-}
-
-.kpi-item {
-  flex: 1;
-  background: var(--surface);
-  padding: 16px 20px;
-  text-align: center;
-}
-
-.kpi-value {
-  font-size: 26px;
-  font-weight: 700;
-  color: var(--navy);
-  font-family: 'JetBrains Mono', monospace;
-  line-height: 1;
-}
-
+.kpi-bar { display: flex; gap: 1px; background: var(--border); border-bottom: 1px solid var(--border); }
+.kpi-item { flex: 1; background: var(--surface); padding: 14px 16px; text-align: center; }
+.kpi-value { font-size: 24px; font-weight: 700; color: var(--navy); font-family: 'JetBrains Mono', monospace; line-height: 1; }
 .kpi-value.danger { color: var(--danger); }
 .kpi-value.warning { color: var(--warning); }
 .kpi-value.success { color: var(--success); }
+.kpi-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; margin-top: 4px; font-weight: 500; }
 
-.kpi-label {
-  font-size: 11px;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
-  margin-top: 4px;
-  font-weight: 500;
-}
-
-/* --- MAIN CONTENT --- */
-.main-content {
-  padding: 24px 32px;
-}
-
-/* --- FILTER BAR --- */
-.filter-bar {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 20px;
-}
-
-.search-box {
-  flex: 1;
-  max-width: 400px;
-  position: relative;
-}
-
-.search-box input {
-  width: 100%;
-  padding: 10px 14px 10px 38px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  font-size: 13px;
-  font-family: inherit;
-  background: var(--surface);
-  color: var(--text-primary);
-  transition: var(--transition);
-}
-
-.search-box input:focus {
-  outline: none;
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(59,130,246,0.1);
-}
-
-.search-box svg {
-  position: absolute;
-  left: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: var(--text-muted);
-}
-
-.filter-chip {
-  padding: 8px 16px;
-  border: 1px solid var(--border);
-  border-radius: 20px;
-  font-size: 12px;
-  font-family: inherit;
-  font-weight: 500;
-  color: var(--text-secondary);
-  background: var(--surface);
-  cursor: pointer;
-  transition: var(--transition);
-  white-space: nowrap;
-}
-
+.main-content { padding: 20px 28px; }
+.filter-bar { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+.search-box { flex: 1; max-width: 360px; position: relative; }
+.search-box input { width: 100%; padding: 9px 14px 9px 36px; border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 13px; font-family: inherit; background: var(--surface); color: var(--text-primary); transition: var(--transition); }
+.search-box input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(59,130,246,0.1); }
+.search-box svg { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); color: var(--text-muted); }
+.filter-chip { padding: 7px 14px; border: 1px solid var(--border); border-radius: 20px; font-size: 12px; font-family: inherit; font-weight: 500; color: var(--text-secondary); background: var(--surface); cursor: pointer; transition: var(--transition); white-space: nowrap; }
 .filter-chip:hover { border-color: var(--accent); color: var(--accent); }
 .filter-chip.active { background: var(--navy); color: #fff; border-color: var(--navy); }
+.filter-count { font-size: 12px; color: var(--text-muted); margin-left: auto; font-family: 'JetBrains Mono', monospace; }
 
-.filter-count {
-  font-size: 12px;
-  color: var(--text-muted);
-  margin-left: auto;
-  font-family: 'JetBrains Mono', monospace;
-}
-
-/* --- WO TABLE --- */
-.wo-table-wrap {
-  background: var(--surface);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  overflow: hidden;
-}
-
-.wo-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.wo-table thead th {
-  padding: 12px 16px;
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.6px;
-  color: var(--text-muted);
-  text-align: left;
-  background: var(--surface-alt);
-  border-bottom: 2px solid var(--border);
-  position: sticky;
-  top: 64px;
-  z-index: 10;
-  white-space: nowrap;
-  cursor: pointer;
-  user-select: none;
-}
-
+.wo-table-wrap { background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow); overflow: auto; max-height: calc(100vh - var(--topbar-h) - 160px); }
+.wo-table { width: 100%; border-collapse: collapse; }
+.wo-table thead th { padding: 11px 14px; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.6px; color: var(--text-muted); text-align: left; background: var(--surface-alt); border-bottom: 2px solid var(--border); position: sticky; top: 0; z-index: 10; white-space: nowrap; cursor: pointer; user-select: none; }
 .wo-table thead th:hover { color: var(--navy); }
 .wo-table thead th .sort-icon { margin-left: 4px; opacity: 0.4; font-size: 10px; }
 .wo-table thead th.sorted .sort-icon { opacity: 1; color: var(--accent); }
-
-.wo-table tbody tr {
-  cursor: pointer;
-  transition: var(--transition);
-  border-bottom: 1px solid var(--border-light);
-}
-
-.wo-table tbody tr:hover {
-  background: var(--surface-hover);
-}
-
-.wo-table tbody tr:active {
-  background: var(--info-bg);
-}
-
-.wo-table tbody td {
-  padding: 14px 16px;
-  font-size: 13px;
-  vertical-align: middle;
-}
-
-.wo-id {
-  font-family: 'JetBrains Mono', monospace;
-  font-weight: 600;
-  color: var(--navy);
-  font-size: 13px;
-}
-
-.customer-name {
-  font-weight: 500;
-  color: var(--text-primary);
-}
-
-.desc-text {
-  color: var(--text-secondary);
-  max-width: 200px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-/* Progress bar */
-.progress-wrap {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  min-width: 140px;
-}
-
-.progress-bar-bg {
-  flex: 1;
-  height: 6px;
-  background: var(--border);
-  border-radius: 3px;
-  overflow: hidden;
-}
-
-.progress-bar-fill {
-  height: 100%;
-  border-radius: 3px;
-  transition: width 0.6s ease;
-}
-
-.progress-pct {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 12px;
-  font-weight: 500;
-  min-width: 38px;
-  text-align: right;
-}
-
-/* Deadline badge */
-.deadline-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 4px 10px;
-  border-radius: 12px;
-  font-size: 12px;
-  font-weight: 600;
-  font-family: 'JetBrains Mono', monospace;
-}
-
+.wo-table tbody tr { cursor: pointer; transition: var(--transition); border-bottom: 1px solid var(--border-light); }
+.wo-table tbody tr:hover { background: var(--surface-hover); }
+.wo-table tbody td { padding: 12px 14px; font-size: 13px; vertical-align: middle; }
+.wo-id { font-family: 'JetBrains Mono', monospace; font-weight: 600; color: var(--navy); font-size: 12px; white-space: nowrap; }
+.customer-name { font-weight: 500; color: var(--text-primary); white-space: nowrap; }
+.desc-text { color: var(--text-secondary); max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.progress-wrap { display: flex; align-items: center; gap: 8px; min-width: 130px; }
+.progress-bar-bg { flex: 1; height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
+.progress-bar-fill { height: 100%; border-radius: 3px; transition: width 0.6s ease; }
+.progress-pct { font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 500; min-width: 36px; text-align: right; }
+.deadline-badge { display: inline-flex; align-items: center; padding: 3px 9px; border-radius: 12px; font-size: 11px; font-weight: 600; font-family: 'JetBrains Mono', monospace; white-space: nowrap; }
 .deadline-badge.overdue { background: var(--danger-bg); color: var(--danger); }
 .deadline-badge.urgent { background: var(--warning-bg); color: #B45309; }
 .deadline-badge.ok { background: var(--success-bg); color: #047857; }
 .deadline-badge.neutral { background: var(--surface-alt); color: var(--text-secondary); }
+.amount-cell { font-family: 'JetBrains Mono', monospace; font-weight: 500; font-size: 12px; text-align: right; white-space: nowrap; }
+.date-cell { font-size: 12px; color: var(--text-secondary); white-space: nowrap; }
+.parts-cell { font-family: 'JetBrains Mono', monospace; font-size: 12px; text-align: center; white-space: nowrap; }
 
-.amount-cell {
-  font-family: 'JetBrains Mono', monospace;
-  font-weight: 500;
-  font-size: 13px;
-  text-align: right;
-  white-space: nowrap;
-}
-
-.date-cell {
-  font-size: 12px;
-  color: var(--text-secondary);
-  white-space: nowrap;
-}
-
-/* --- DETAIL VIEW (WO Detail Panel) --- */
-.detail-overlay {
-  display: none;
-  position: fixed;
-  inset: 0;
-  z-index: 200;
-  background: rgba(14,17,101,0.3);
-  backdrop-filter: blur(4px);
-  animation: fadeIn 0.2s ease;
-}
-
-.detail-overlay.active { display: flex; }
-
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-.detail-panel {
-  position: absolute;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  width: min(900px, 90vw);
-  background: var(--surface);
-  box-shadow: -8px 0 40px rgba(14,17,101,0.15);
-  overflow-y: auto;
-  animation: slideIn 0.3s cubic-bezier(0.4,0,0.2,1);
-}
-
-@keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
-
-.detail-header {
-  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
-  padding: 24px 32px;
-  color: #fff;
-  position: sticky;
-  top: 0;
-  z-index: 10;
-}
-
-.detail-header-top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 12px;
-}
-
-.btn-back {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  background: rgba(255,255,255,0.1);
-  border: 1px solid rgba(255,255,255,0.15);
-  color: #fff;
-  padding: 6px 14px;
-  border-radius: var(--radius-sm);
-  font-size: 12px;
-  font-family: inherit;
-  font-weight: 500;
-  cursor: pointer;
-  transition: var(--transition);
-}
-
+/* DETAIL — Full screen */
+.detail-overlay { display: none; position: fixed; inset: 0; z-index: 200; background: var(--surface-alt); overflow-y: auto; }
+.detail-overlay.active { display: block; }
+.detail-header { background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%); padding: 20px 32px; color: #fff; position: sticky; top: 0; z-index: 10; }
+.detail-header-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.btn-back { display: flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15); color: #fff; padding: 7px 16px; border-radius: var(--radius-sm); font-size: 13px; font-family: inherit; font-weight: 500; cursor: pointer; transition: var(--transition); }
 .btn-back:hover { background: rgba(255,255,255,0.2); }
-
-.detail-wo-id {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 24px;
-  font-weight: 700;
-}
-
-.detail-meta {
-  display: flex;
-  gap: 24px;
-  margin-top: 8px;
-  font-size: 13px;
-  color: rgba(255,255,255,0.75);
-}
-
+.detail-wo-id { font-family: 'JetBrains Mono', monospace; font-size: 22px; font-weight: 700; }
+.detail-customer { font-size: 15px; font-weight: 500; color: rgba(255,255,255,0.9); margin-top: 2px; }
+.detail-meta { display: flex; gap: 24px; margin-top: 8px; font-size: 13px; color: rgba(255,255,255,0.7); flex-wrap: wrap; }
 .detail-meta strong { color: #fff; font-weight: 600; }
-
-.detail-body {
-  padding: 24px 32px;
-}
-
-/* Detail KPI row */
-.detail-kpis {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 12px;
-  margin-bottom: 24px;
-}
-
-.detail-kpi {
-  background: var(--surface-alt);
-  border: 1px solid var(--border-light);
-  border-radius: var(--radius-sm);
-  padding: 14px 16px;
-  text-align: center;
-}
-
-.detail-kpi-val {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 22px;
-  font-weight: 700;
-  color: var(--navy);
-}
-
-.detail-kpi-label {
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 0.6px;
-  color: var(--text-muted);
-  margin-top: 2px;
-  font-weight: 500;
-}
-
-/* Parts table inside detail */
-.parts-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.parts-table thead th {
-  padding: 10px 12px;
-  font-size: 10px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  color: var(--text-muted);
-  text-align: left;
-  background: var(--surface-alt);
-  border-bottom: 2px solid var(--border);
-  white-space: nowrap;
-}
-
-.parts-table tbody tr {
-  border-bottom: 1px solid var(--border-light);
-  cursor: pointer;
-  transition: var(--transition);
-}
-
+.detail-body { padding: 24px 32px; max-width: 1400px; }
+.detail-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin-bottom: 24px; }
+.detail-kpi { background: var(--surface); border: 1px solid var(--border-light); border-radius: var(--radius-sm); padding: 14px 16px; text-align: center; box-shadow: var(--shadow-sm); }
+.detail-kpi-val { font-family: 'JetBrains Mono', monospace; font-size: 20px; font-weight: 700; color: var(--navy); }
+.detail-kpi-val.success { color: var(--success); }
+.detail-kpi-val.danger { color: var(--danger); }
+.detail-kpi-val.warning { color: var(--warning); }
+.detail-kpi-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.6px; color: var(--text-muted); margin-top: 2px; font-weight: 500; }
+.parts-section-title { font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+.parts-section-title .count { font-family: 'JetBrains Mono', monospace; font-size: 11px; background: var(--navy); color: #fff; padding: 2px 8px; border-radius: 10px; }
+.parts-table-wrap { background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow); overflow: auto; }
+.parts-table { width: 100%; border-collapse: collapse; }
+.parts-table thead th { padding: 10px 12px; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); text-align: left; background: var(--surface-alt); border-bottom: 2px solid var(--border); white-space: nowrap; position: sticky; top: 0; }
+.parts-table tbody tr { border-bottom: 1px solid var(--border-light); cursor: pointer; transition: var(--transition); }
 .parts-table tbody tr:hover { background: var(--surface-hover); }
-
-.parts-table tbody td {
-  padding: 12px 12px;
-  font-size: 12px;
-  vertical-align: middle;
-}
-
-.pn-code {
-  font-family: 'JetBrains Mono', monospace;
-  font-weight: 600;
-  font-size: 12px;
-  color: var(--navy);
-}
-
-.stock-badge {
-  display: inline-block;
-  padding: 2px 8px;
-  border-radius: 10px;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
-  font-weight: 600;
-}
-
+.parts-table tbody td { padding: 11px 12px; font-size: 12px; vertical-align: middle; }
+.pn-code { font-family: 'JetBrains Mono', monospace; font-weight: 600; font-size: 11px; color: var(--navy); }
+.stock-badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 600; }
 .stock-badge.in-stock { background: var(--success-bg); color: #047857; }
 .stock-badge.no-stock { background: var(--danger-bg); color: var(--danger); }
 .stock-badge.loading { background: var(--surface-alt); color: var(--text-muted); }
 
-/* --- PART DETAIL MODAL --- */
-.part-modal-overlay {
-  display: none;
-  position: fixed;
-  inset: 0;
-  z-index: 300;
-  background: rgba(14,17,101,0.4);
-  backdrop-filter: blur(4px);
-  justify-content: center;
-  align-items: center;
-  animation: fadeIn 0.2s ease;
-}
-
+/* PART MODAL */
+.part-modal-overlay { display: none; position: fixed; inset: 0; z-index: 300; background: rgba(14,17,101,0.4); backdrop-filter: blur(4px); justify-content: center; align-items: center; }
 .part-modal-overlay.active { display: flex; }
-
-.part-modal {
-  background: var(--surface);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-lg);
-  width: min(720px, 92vw);
-  max-height: 85vh;
-  overflow-y: auto;
-  animation: scaleIn 0.25s cubic-bezier(0.4,0,0.2,1);
-}
-
-@keyframes scaleIn { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-
-.part-modal-header {
-  padding: 20px 28px;
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-}
-
-.part-modal-pn {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 20px;
-  font-weight: 700;
-  color: var(--navy);
-}
-
-.part-modal-desc {
-  font-size: 13px;
-  color: var(--text-secondary);
-  margin-top: 2px;
-}
-
-.btn-close-modal {
-  background: none;
-  border: 1px solid var(--border);
-  width: 32px;
-  height: 32px;
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--text-muted);
-  font-size: 16px;
-  transition: var(--transition);
-}
-
+.part-modal { background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow-lg); width: min(760px, 94vw); max-height: 88vh; overflow-y: auto; animation: scaleIn 0.2s cubic-bezier(0.4,0,0.2,1); }
+@keyframes scaleIn { from{transform:scale(0.96);opacity:0} to{transform:scale(1);opacity:1} }
+.part-modal-header { padding: 20px 24px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: flex-start; }
+.part-modal-pn { font-family: 'JetBrains Mono', monospace; font-size: 18px; font-weight: 700; color: var(--navy); }
+.part-modal-desc { font-size: 13px; color: var(--text-secondary); margin-top: 2px; }
+.btn-close-modal { background: none; border: 1px solid var(--border); width: 32px; height: 32px; border-radius: var(--radius-sm); cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--text-muted); font-size: 16px; transition: var(--transition); flex-shrink: 0; }
 .btn-close-modal:hover { background: var(--surface-alt); color: var(--text-primary); }
-
-.part-modal-body {
-  padding: 24px 28px;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-}
-
-.part-image-area {
-  grid-column: 1 / -1;
-  background: var(--surface-alt);
-  border: 1px solid var(--border-light);
-  border-radius: var(--radius-sm);
-  min-height: 200px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-}
-
-.part-image-area img {
-  max-width: 100%;
-  max-height: 300px;
-  object-fit: contain;
-}
-
-.part-image-area .no-image {
-  color: var(--text-muted);
-  font-size: 13px;
-}
-
-.part-info-group h4 {
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 0.6px;
-  color: var(--text-muted);
-  font-weight: 600;
-  margin-bottom: 8px;
-}
-
-.part-info-row {
-  display: flex;
-  justify-content: space-between;
-  padding: 6px 0;
-  border-bottom: 1px solid var(--border-light);
-  font-size: 13px;
-}
-
+.part-modal-body { padding: 20px 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.part-image-area { grid-column: 1 / -1; background: var(--surface-alt); border: 1px solid var(--border-light); border-radius: var(--radius-sm); min-height: 180px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+.part-image-area img { max-width: 100%; max-height: 280px; object-fit: contain; }
+.part-image-area .no-image { color: var(--text-muted); font-size: 13px; }
+.part-info-group h4 { font-size: 10px; text-transform: uppercase; letter-spacing: 0.6px; color: var(--text-muted); font-weight: 600; margin-bottom: 8px; padding-bottom: 6px; border-bottom: 2px solid var(--navy); }
+.part-info-row { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid var(--border-light); font-size: 12px; gap: 12px; }
 .part-info-row:last-child { border-bottom: none; }
-
-.part-info-label { color: var(--text-secondary); }
-.part-info-value { font-weight: 500; color: var(--text-primary); }
-.part-info-value.mono { font-family: 'JetBrains Mono', monospace; font-size: 12px; }
-
-.part-link {
-  color: var(--accent);
-  text-decoration: none;
-  font-weight: 500;
-  font-size: 12px;
-}
-
+.part-info-label { color: var(--text-secondary); flex-shrink: 0; }
+.part-info-value { font-weight: 500; color: var(--text-primary); text-align: right; word-break: break-all; }
+.part-info-value.mono { font-family: 'JetBrains Mono', monospace; font-size: 11px; }
+.part-link { color: var(--accent); text-decoration: none; font-weight: 500; font-size: 12px; }
 .part-link:hover { text-decoration: underline; }
 
-/* --- LOADING --- */
-.loader-wrap {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 80px 20px;
-  gap: 16px;
-}
+.loader-wrap { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 60px 20px; gap: 14px; }
+.loader { width: 32px; height: 32px; border: 3px solid var(--border); border-top-color: var(--navy); border-radius: 50%; animation: spin 0.7s linear infinite; }
+@keyframes spin { to{transform:rotate(360deg)} }
+.loader-text { font-size: 13px; color: var(--text-muted); }
 
-.loader {
-  width: 36px;
-  height: 36px;
-  border: 3px solid var(--border);
-  border-top-color: var(--navy);
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
-}
-
-@keyframes spin { to { transform: rotate(360deg); } }
-
-.loader-text {
-  font-size: 13px;
-  color: var(--text-muted);
-}
-
-/* --- SCROLLBAR --- */
-::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar { width: 5px; height: 5px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
 
-/* --- RESPONSIVE --- */
-@media (max-width: 1200px) {
-  .topbar { padding: 0 20px; }
-  .main-content { padding: 16px 20px; }
+@media (max-width: 1100px) {
+  .topbar { padding: 0 16px; }
+  .main-content { padding: 14px 16px; }
   .kpi-bar { flex-wrap: wrap; }
   .kpi-item { flex: 1 1 calc(33% - 1px); }
+  .part-modal-body { grid-template-columns: 1fr; }
 }
 </style>
 </head>
 <body>
 
-<!-- =============== TOP BAR =============== -->
 <div class="topbar">
   <div class="topbar-left">
     <div class="topbar-logo">AM-CRAFT <span>|</span></div>
@@ -734,577 +197,393 @@ body {
     <div class="topbar-title">Production Dashboard</div>
   </div>
   <div class="topbar-right">
-    <div class="topbar-status">
-      <div class="status-dot"></div>
-      <span>Live</span>
-    </div>
+    <div class="topbar-status"><div class="status-dot"></div><span>Live</span></div>
     <div class="topbar-clock" id="clock"></div>
     <button class="btn-refresh" onclick="loadWorkOrders()">↻ Refresh</button>
   </div>
 </div>
+<div class="topbar-spacer"></div>
 
-<!-- =============== KPI BAR =============== -->
 <div class="kpi-bar">
-  <div class="kpi-item">
-    <div class="kpi-value" id="kpiTotal">—</div>
-    <div class="kpi-label">Open WOs</div>
-  </div>
-  <div class="kpi-item">
-    <div class="kpi-value danger" id="kpiOverdue">—</div>
-    <div class="kpi-label">Overdue</div>
-  </div>
-  <div class="kpi-item">
-    <div class="kpi-value warning" id="kpiUrgent">—</div>
-    <div class="kpi-label">Due ≤7 Days</div>
-  </div>
-  <div class="kpi-item">
-    <div class="kpi-value" id="kpiParts">—</div>
-    <div class="kpi-label">Total Parts</div>
-  </div>
-  <div class="kpi-item">
-    <div class="kpi-value success" id="kpiAvgProgress">—</div>
-    <div class="kpi-label">Avg Progress</div>
-  </div>
-  <div class="kpi-item">
-    <div class="kpi-value" id="kpiTotalValue">—</div>
-    <div class="kpi-label">Total Value</div>
-  </div>
+  <div class="kpi-item"><div class="kpi-value" id="kpiTotal">—</div><div class="kpi-label">Open WOs</div></div>
+  <div class="kpi-item"><div class="kpi-value danger" id="kpiOverdue">—</div><div class="kpi-label">Overdue</div></div>
+  <div class="kpi-item"><div class="kpi-value warning" id="kpiUrgent">—</div><div class="kpi-label">Due ≤7 Days</div></div>
+  <div class="kpi-item"><div class="kpi-value" id="kpiParts">—</div><div class="kpi-label">Total Parts</div></div>
+  <div class="kpi-item"><div class="kpi-value success" id="kpiAvgProgress">—</div><div class="kpi-label">Avg Print %</div></div>
+  <div class="kpi-item"><div class="kpi-value" id="kpiTotalValue">—</div><div class="kpi-label">Total Value</div></div>
 </div>
 
-<!-- =============== MAIN TABLE =============== -->
 <div class="main-content">
   <div class="filter-bar">
     <div class="search-box">
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1.5"/><path d="M11 11L14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1.5"/><path d="M11 11L14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
       <input type="text" id="searchInput" placeholder="Search WO, customer, description…" oninput="filterTable()">
     </div>
     <button class="filter-chip active" data-filter="all" onclick="setFilter(this)">All</button>
     <button class="filter-chip" data-filter="overdue" onclick="setFilter(this)">Overdue</button>
-    <button class="filter-chip" data-filter="urgent" onclick="setFilter(this)">Urgent</button>
+    <button class="filter-chip" data-filter="urgent" onclick="setFilter(this)">≤7 Days</button>
     <button class="filter-chip" data-filter="on-track" onclick="setFilter(this)">On Track</button>
     <div class="filter-count" id="filterCount"></div>
   </div>
-
   <div id="mainTableArea">
-    <div class="loader-wrap">
-      <div class="loader"></div>
-      <div class="loader-text">Loading production data…</div>
-    </div>
+    <div class="loader-wrap"><div class="loader"></div><div class="loader-text">Loading production data…</div></div>
   </div>
 </div>
 
-<!-- =============== WO DETAIL PANEL =============== -->
-<div class="detail-overlay" id="detailOverlay" onclick="if(event.target===this)closeDetail()">
-  <div class="detail-panel" id="detailPanel">
-    <div class="detail-header">
-      <div class="detail-header-top">
-        <button class="btn-back" onclick="closeDetail()">← Back</button>
-        <div class="deadline-badge neutral" id="detailDeadlineBadge"></div>
-      </div>
-      <div class="detail-wo-id" id="detailWoId"></div>
-      <div class="detail-meta" id="detailMeta"></div>
+<div class="detail-overlay" id="detailOverlay">
+  <div class="detail-header">
+    <div class="detail-header-top">
+      <button class="btn-back" onclick="closeDetail()">← Back to Dashboard</button>
+      <div class="deadline-badge neutral" id="detailDeadlineBadge"></div>
     </div>
-    <div class="detail-body" id="detailBody">
-      <div class="loader-wrap">
-        <div class="loader"></div>
-        <div class="loader-text">Loading work order details…</div>
-      </div>
-    </div>
+    <div class="detail-wo-id" id="detailWoId"></div>
+    <div class="detail-customer" id="detailCustomer"></div>
+    <div class="detail-meta" id="detailMeta"></div>
   </div>
+  <div class="detail-body" id="detailBody"></div>
 </div>
 
-<!-- =============== PART DETAIL MODAL =============== -->
 <div class="part-modal-overlay" id="partModalOverlay" onclick="if(event.target===this)closePartModal()">
   <div class="part-modal">
     <div class="part-modal-header">
-      <div>
-        <div class="part-modal-pn" id="partModalPN"></div>
-        <div class="part-modal-desc" id="partModalDesc"></div>
-      </div>
+      <div><div class="part-modal-pn" id="partModalPN"></div><div class="part-modal-desc" id="partModalDesc"></div></div>
       <button class="btn-close-modal" onclick="closePartModal()">✕</button>
     </div>
-    <div class="part-modal-body" id="partModalBody">
-      <div class="loader-wrap" style="grid-column:1/-1">
-        <div class="loader"></div>
-        <div class="loader-text">Loading part details from AM-101…</div>
-      </div>
-    </div>
+    <div class="part-modal-body" id="partModalBody"></div>
   </div>
 </div>
 
 <script>
-// ============================================================
-// CONFIGURATION
-// ============================================================
-// IMPORTANT: Replace this URL after deploying Code.gs as Web App
 var API_BASE = 'https://script.google.com/macros/s/AKfycbzErJwC-vAczZ4u8piJzdVgtCCeQlGy7IEfT5yPxoEAvqc4o0jWu3d4dRWaIj9vQy_f/exec';
-
 var allWorkOrders = [];
 var currentFilter = 'all';
 var sortCol = 'daysUntilDeadline';
 var sortAsc = true;
 
-// ============================================================
-// JSONP HELPER
-// ============================================================
-var _cbCounter = 0;
-
+// JSONP
+var _cbc = 0;
 function apiCall(params) {
   return new Promise(function(resolve, reject) {
-    var cbName = '__dashCb' + (_cbCounter++);
-    var timeout = setTimeout(function() {
-      delete window[cbName];
-      reject(new Error('Request timeout'));
-    }, 30000);
-
-    window[cbName] = function(data) {
-      clearTimeout(timeout);
-      delete window[cbName];
-      resolve(data);
-    };
-
-    var qs = 'callback=' + cbName;
-    for (var k in params) {
-      qs += '&' + encodeURIComponent(k) + '=' + encodeURIComponent(params[k]);
-    }
-
-    var script = document.createElement('script');
-    script.src = API_BASE + '?' + qs;
-    script.onerror = function() {
-      clearTimeout(timeout);
-      delete window[cbName];
-      reject(new Error('Network error'));
-    };
-    document.body.appendChild(script);
-    setTimeout(function() { script.remove(); }, 100);
+    var cb = '__dc' + (_cbc++);
+    var t = setTimeout(function() { delete window[cb]; reject(new Error('Timeout')); }, 30000);
+    window[cb] = function(d) { clearTimeout(t); delete window[cb]; resolve(d); };
+    var qs = 'callback=' + cb;
+    for (var k in params) qs += '&' + encodeURIComponent(k) + '=' + encodeURIComponent(params[k]);
+    var s = document.createElement('script');
+    s.src = API_BASE + '?' + qs;
+    s.onerror = function() { clearTimeout(t); delete window[cb]; reject(new Error('Network error')); };
+    document.body.appendChild(s);
+    setTimeout(function() { s.remove(); }, 200);
   });
 }
 
-// ============================================================
-// LOAD WORK ORDERS
-// ============================================================
-function loadWorkOrders() {
-  document.getElementById('mainTableArea').innerHTML =
-    '<div class="loader-wrap"><div class="loader"></div><div class="loader-text">Loading production data…</div></div>';
-
-  apiCall({ action: 'getWorkOrders' }).then(function(res) {
-    if (!res.success) {
-      document.getElementById('mainTableArea').innerHTML =
-        '<div class="loader-wrap"><div class="loader-text" style="color:var(--danger)">Error: ' + (res.error || 'Unknown') + '</div></div>';
-      return;
-    }
-    allWorkOrders = res.data;
-    updateKPIs();
-    renderTable();
-  }).catch(function(err) {
-    document.getElementById('mainTableArea').innerHTML =
-      '<div class="loader-wrap"><div class="loader-text" style="color:var(--danger)">Connection error. Check API URL.</div></div>';
-  });
-}
-
-// ============================================================
-// KPI CALCULATIONS
-// ============================================================
-function updateKPIs() {
-  var total = allWorkOrders.length;
-  var overdue = 0, urgent = 0, totalParts = 0, progressSum = 0, totalValue = 0;
-
-  allWorkOrders.forEach(function(wo) {
-    var days = parseFloat(wo.daysUntilDeadline);
-    if (!isNaN(days) && days < 0) overdue++;
-    if (!isNaN(days) && days >= 0 && days <= 7) urgent++;
-    totalParts += parseInt(wo.qtyParts) || 0;
-    var pct = parseFloat(wo.printingProgressPct);
-    if (!isNaN(pct)) progressSum += pct;
-    var amt = parseFloat(wo.amount);
-    if (!isNaN(amt)) totalValue += amt;
-  });
-
-  document.getElementById('kpiTotal').textContent = total;
-  document.getElementById('kpiOverdue').textContent = overdue;
-  document.getElementById('kpiUrgent').textContent = urgent;
-  document.getElementById('kpiParts').textContent = totalParts.toLocaleString();
-  document.getElementById('kpiAvgProgress').textContent = total > 0 ? Math.round(progressSum / total) + '%' : '—';
-  document.getElementById('kpiTotalValue').textContent = formatCurrency(totalValue);
-}
-
-// ============================================================
-// RENDER TABLE
-// ============================================================
-function renderTable() {
-  var data = getFilteredData();
-  sortData(data);
-
-  var html = '<div class="wo-table-wrap"><table class="wo-table"><thead><tr>';
-  var cols = [
-    { key: 'wo', label: 'Work Order' },
-    { key: 'customer', label: 'Customer' },
-    { key: 'description', label: 'Description' },
-    { key: 'printingProgressPct', label: 'Print Progress' },
-    { key: 'productionProgress', label: 'Production' },
-    { key: 'daysUntilDeadline', label: 'Deadline' },
-    { key: 'deliveryDeadline', label: 'Delivery' },
-    { key: 'qtyParts', label: 'Parts' },
-    { key: 'amount', label: 'Amount' }
-  ];
-
-  cols.forEach(function(c) {
-    var sorted = sortCol === c.key;
-    html += '<th class="' + (sorted ? 'sorted' : '') + '" onclick="toggleSort(\'' + c.key + '\')">' +
-      c.label + '<span class="sort-icon">' + (sorted ? (sortAsc ? '▲' : '▼') : '⇅') + '</span></th>';
-  });
-  html += '</tr></thead><tbody>';
-
-  if (data.length === 0) {
-    html += '<tr><td colspan="9" style="text-align:center;padding:40px;color:var(--text-muted)">No work orders found</td></tr>';
+// Progress conversion: 0.154 -> 15.4, 1 -> 100, "Not Started" -> 0
+function toPercent(val) {
+  if (val === '' || val === null || val === undefined) return null;
+  if (typeof val === 'string') {
+    var low = val.toLowerCase();
+    if (low.indexOf('not started') !== -1) return 0;
+    if (low.indexOf('complete') !== -1) return 100;
+    var n = parseFloat(val);
+    if (isNaN(n)) return null;
+    val = n;
   }
-
-  data.forEach(function(wo) {
-    var days = parseFloat(wo.daysUntilDeadline);
-    var pct = parseFloat(wo.printingProgressPct) || 0;
-    var deadlineClass = getDeadlineClass(days);
-    var progressColor = pct >= 80 ? 'var(--success)' : pct >= 40 ? 'var(--accent)' : pct > 0 ? 'var(--warning)' : 'var(--border)';
-
-    html += '<tr onclick="openDetail(\'' + escHtml(wo.wo) + '\')">';
-    html += '<td><span class="wo-id">' + escHtml(wo.wo) + '</span></td>';
-    html += '<td><span class="customer-name">' + escHtml(wo.customer) + '</span></td>';
-    html += '<td><span class="desc-text" title="' + escHtml(wo.description) + '">' + escHtml(wo.description) + '</span></td>';
-    html += '<td><div class="progress-wrap"><div class="progress-bar-bg"><div class="progress-bar-fill" style="width:' + pct + '%;background:' + progressColor + '"></div></div><span class="progress-pct">' + formatPct(pct) + '</span></div></td>';
-    html += '<td><span class="desc-text">' + escHtml(wo.productionProgress) + '</span></td>';
-    html += '<td><span class="deadline-badge ' + deadlineClass + '">' + formatDays(days) + '</span></td>';
-    html += '<td><span class="date-cell">' + escHtml(wo.deliveryDeadline) + '</span></td>';
-    html += '<td style="text-align:center;font-family:\'JetBrains Mono\',monospace;font-size:12px">' + (wo.printingProgress || '—') + '</td>';
-    html += '<td><span class="amount-cell">' + formatCurrency(wo.amount) + '</span></td>';
-    html += '</tr>';
-  });
-
-  html += '</tbody></table></div>';
-  document.getElementById('mainTableArea').innerHTML = html;
-  document.getElementById('filterCount').textContent = data.length + ' of ' + allWorkOrders.length + ' work orders';
-}
-
-// ============================================================
-// OPEN WO DETAIL
-// ============================================================
-function openDetail(woNumber) {
-  var overlay = document.getElementById('detailOverlay');
-  overlay.classList.add('active');
-  document.body.style.overflow = 'hidden';
-
-  // Find WO summary data
-  var woSummary = allWorkOrders.find(function(w) { return w.wo === woNumber; });
-
-  document.getElementById('detailWoId').textContent = woNumber;
-
-  if (woSummary) {
-    var days = parseFloat(woSummary.daysUntilDeadline);
-    var badge = document.getElementById('detailDeadlineBadge');
-    badge.className = 'deadline-badge ' + getDeadlineClass(days);
-    badge.textContent = formatDays(days);
-
-    document.getElementById('detailMeta').innerHTML =
-      '<span><strong>Customer:</strong> ' + escHtml(woSummary.customer) + '</span>' +
-      '<span><strong>Delivery:</strong> ' + escHtml(woSummary.deliveryDeadline) + '</span>' +
-      '<span><strong>Production:</strong> ' + escHtml(woSummary.productionDeadline) + '</span>' +
-      '<span><strong>Amount:</strong> ' + formatCurrency(woSummary.amount) + '</span>';
+  if (typeof val === 'number') {
+    // Values 0-1.x are fractions, 2+ are already percentages
+    if (val >= 0 && val <= 1.001) return Math.round(val * 1000) / 10;
+    return Math.round(val * 10) / 10;
   }
-
-  document.getElementById('detailBody').innerHTML =
-    '<div class="loader-wrap"><div class="loader"></div><div class="loader-text">Loading parts for ' + woNumber + '…</div></div>';
-
-  apiCall({ action: 'getWODetails', wo: woNumber }).then(function(res) {
-    if (!res.success) {
-      document.getElementById('detailBody').innerHTML =
-        '<div class="loader-wrap"><div class="loader-text" style="color:var(--danger)">Error: ' + (res.error || 'Unknown') + '</div></div>';
-      return;
-    }
-    renderDetailBody(res.data, woSummary);
-  }).catch(function(err) {
-    document.getElementById('detailBody').innerHTML =
-      '<div class="loader-wrap"><div class="loader-text" style="color:var(--danger)">Failed to load details.</div></div>';
-  });
+  return null;
 }
 
-function renderDetailBody(parts, woSummary) {
-  var body = document.getElementById('detailBody');
-  var html = '';
-
-  // KPI row
-  if (woSummary) {
-    var pct = parseFloat(woSummary.printingProgressPct) || 0;
-    html += '<div class="detail-kpis">';
-    html += kpiCard(woSummary.qtyParts, 'Total Parts');
-    html += kpiCard(woSummary.qtyPrinted, 'Printed');
-    html += kpiCard(woSummary.successfullyPrinted, 'Successful');
-    html += kpiCard(formatPct(pct), 'Print Progress');
-    html += kpiCard(woSummary.qcPassed, 'QC Passed');
-    html += kpiCard(woSummary.scrapRate ? (parseFloat(woSummary.scrapRate) * 100).toFixed(1) + '%' : '0%', 'Scrap Rate');
-    html += '</div>';
+function progressLabel(val) {
+  if (val === '' || val === null || val === undefined) return '—';
+  if (typeof val === 'string') {
+    var low = val.toLowerCase();
+    if (low.indexOf('not started') !== -1) return 'Not Started';
+    if (low.indexOf('complete') !== -1) return 'Complete';
   }
-
-  // Parts table
-  html += '<table class="parts-table"><thead><tr>';
-  html += '<th>Part Number</th><th>Description</th><th>PO Qty</th><th>Launched</th><th>Printed</th>';
-  html += '<th>QC Pass</th><th>Progress</th><th>Stock</th><th>Scrap</th>';
-  html += '</tr></thead><tbody>';
-
-  if (parts.length === 0) {
-    html += '<tr><td colspan="9" style="text-align:center;padding:30px;color:var(--text-muted)">No parts found for this WO</td></tr>';
-  }
-
-  // Collect part numbers for batch stock check
-  var partNumbers = parts.map(function(p) { return p.partNumber; }).filter(Boolean);
-
-  parts.forEach(function(p) {
-    var pct = 0;
-    var match = String(p.printingProgress).match(/(\d+)\s*\/\s*(\d+)/);
-    if (match) pct = parseInt(match[2]) > 0 ? Math.round(parseInt(match[1]) / parseInt(match[2]) * 100) : 0;
-    var progressColor = pct >= 80 ? 'var(--success)' : pct >= 40 ? 'var(--accent)' : pct > 0 ? 'var(--warning)' : 'var(--border)';
-
-    html += '<tr onclick="openPartModal(\'' + escHtml(p.partNumber) + '\',\'' + escHtml(p.description) + '\')">';
-    html += '<td><span class="pn-code">' + escHtml(p.partNumber) + '</span></td>';
-    html += '<td>' + escHtml(p.description) + '</td>';
-    html += '<td style="text-align:center;font-family:\'JetBrains Mono\',monospace">' + (p.poQty || '—') + '</td>';
-    html += '<td style="text-align:center">' + (p.qtyLaunched || 0) + '</td>';
-    html += '<td style="text-align:center">' + (p.qtyPrinted || 0) + '</td>';
-    html += '<td style="text-align:center">' + (p.qcPassed || 0) + '</td>';
-    html += '<td><div class="progress-wrap"><div class="progress-bar-bg"><div class="progress-bar-fill" style="width:' + pct + '%;background:' + progressColor + '"></div></div><span class="progress-pct">' + formatPct(pct) + '</span></div></td>';
-    html += '<td><span class="stock-badge loading" id="stock-' + cssId(p.partNumber) + '">…</span></td>';
-    html += '<td style="font-size:11px">' + (p.scrapRate ? (parseFloat(p.scrapRate) * 100).toFixed(1) + '%' : '0%') + '</td>';
-    html += '</tr>';
-  });
-
-  html += '</tbody></table>';
-  body.innerHTML = html;
-
-  // Batch stock check
-  if (partNumbers.length > 0) {
-    apiCall({ action: 'getStockBatch', items: partNumbers.join(',') }).then(function(res) {
-      if (res.success && res.data) {
-        for (var pn in res.data) {
-          var el = document.getElementById('stock-' + cssId(pn));
-          if (el) {
-            var qty = res.data[pn];
-            if (qty > 0) {
-              el.className = 'stock-badge in-stock';
-              el.textContent = qty;
-            } else if (qty === 0) {
-              el.className = 'stock-badge no-stock';
-              el.textContent = '0';
-            } else {
-              el.className = 'stock-badge no-stock';
-              el.textContent = 'err';
-            }
-          }
-        }
-      }
-    }).catch(function() {});
-  }
+  var pct = toPercent(val);
+  if (pct === null) return '—';
+  if (pct >= 100) return '100%';
+  return pct.toFixed(1) + '%';
 }
 
-function closeDetail() {
-  document.getElementById('detailOverlay').classList.remove('active');
-  document.body.style.overflow = '';
-}
-
-// ============================================================
-// OPEN PART MODAL (AM-101 data)
-// ============================================================
-function openPartModal(partNumber, description) {
-  var overlay = document.getElementById('partModalOverlay');
-  overlay.classList.add('active');
-
-  document.getElementById('partModalPN').textContent = partNumber;
-  document.getElementById('partModalDesc').textContent = description || '';
-  document.getElementById('partModalBody').innerHTML =
-    '<div class="loader-wrap" style="grid-column:1/-1"><div class="loader"></div><div class="loader-text">Loading from AM-101…</div></div>';
-
-  apiCall({ action: 'getPartInfo', pn: partNumber }).then(function(res) {
-    if (!res.success || !res.data) {
-      document.getElementById('partModalBody').innerHTML =
-        '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--text-muted)">Part not found in AM-101</div>';
-      return;
-    }
-    renderPartModal(res.data);
-  }).catch(function() {
-    document.getElementById('partModalBody').innerHTML =
-      '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--danger)">Failed to load part data</div>';
-  });
-}
-
-function renderPartModal(data) {
-  var body = document.getElementById('partModalBody');
-  var html = '';
-
-  // Image
-  html += '<div class="part-image-area">';
-  if (data.pictureLink) {
-    var imgUrl = convertDriveLink(data.pictureLink);
-    html += '<img src="' + escHtml(imgUrl) + '" alt="Part image" onerror="this.style.display=\'none\';this.parentElement.innerHTML=\'<span class=no-image>Image could not be loaded</span>\'">';
-  } else {
-    html += '<span class="no-image">No image available</span>';
-  }
-  html += '</div>';
-
-  // Manufacturing info
-  html += '<div class="part-info-group"><h4>Manufacturing</h4>';
-  html += infoRow('Printing Time', data.printingTimeMin ? data.printingTimeMin + ' min' : '—');
-  html += infoRow('Avg Print Time (multi)', data.avgPrintingTimeMin ? data.avgPrintingTimeMin + ' min' : '—');
-  html += infoRow('Model Material Qty', data.modelMatQty ? data.modelMatQty + ' cm³' : '—');
-  html += infoRow('Support Material Qty', data.supportMatQty ? data.supportMatQty + ' cm³' : '—');
-  html += infoRow('Post-Processing', data.postProcessing || '—');
-  html += infoRow('Release Cert.', data.releaseCert || '—');
-  html += '</div>';
-
-  // Design info
-  html += '<div class="part-info-group"><h4>Design & Files</h4>';
-  html += infoRow('Design Holder', data.designHolder || '—');
-  html += infoRow('Drawing Nr', data.drawingNumber || '—');
-  html += infoRow('Drawing Issue', data.drawingIssue || '—');
-  html += infoRow('CAD File', data.cadFileRef || '—');
-  html += infoRow('CAD Revision', data.cadFileRev || '—');
-  html += infoRow('Capability Checklist', data.capabilityChecklist || '—');
-  if (data.printFileLinkF450) html += '<div class="part-info-row"><span class="part-info-label">Print File F450</span><a class="part-link" href="' + escHtml(data.printFileLinkF450) + '" target="_blank">Open file →</a></div>';
-  if (data.printFileLinkF900) html += '<div class="part-info-row"><span class="part-info-label">Print File F900</span><a class="part-link" href="' + escHtml(data.printFileLinkF900) + '" target="_blank">Open file →</a></div>';
-  html += '</div>';
-
-  body.innerHTML = html;
-}
-
-function closePartModal() {
-  document.getElementById('partModalOverlay').classList.remove('active');
-}
-
-// ============================================================
-// FILTERING & SORTING
-// ============================================================
-function getFilteredData() {
-  var query = document.getElementById('searchInput').value.toLowerCase().trim();
-  return allWorkOrders.filter(function(wo) {
-    // Filter by status
-    if (currentFilter !== 'all') {
-      var days = parseFloat(wo.daysUntilDeadline);
-      if (currentFilter === 'overdue' && (isNaN(days) || days >= 0)) return false;
-      if (currentFilter === 'urgent' && (isNaN(days) || days < 0 || days > 7)) return false;
-      if (currentFilter === 'on-track' && (isNaN(days) || days < 0)) return false;
-    }
-    // Filter by search
-    if (query) {
-      var searchStr = (wo.wo + ' ' + wo.customer + ' ' + wo.description).toLowerCase();
-      if (searchStr.indexOf(query) === -1) return false;
-    }
-    return true;
-  });
-}
-
-function setFilter(el) {
-  document.querySelectorAll('.filter-chip').forEach(function(c) { c.classList.remove('active'); });
-  el.classList.add('active');
-  currentFilter = el.getAttribute('data-filter');
-  renderTable();
-}
-
-function filterTable() { renderTable(); }
-
-function toggleSort(col) {
-  if (sortCol === col) { sortAsc = !sortAsc; }
-  else { sortCol = col; sortAsc = true; }
-  renderTable();
-}
-
-function sortData(data) {
-  data.sort(function(a, b) {
-    var va = a[sortCol], vb = b[sortCol];
-    // Try numeric
-    var na = parseFloat(va), nb = parseFloat(vb);
-    if (!isNaN(na) && !isNaN(nb)) {
-      return sortAsc ? na - nb : nb - na;
-    }
-    // String
-    va = String(va || '').toLowerCase();
-    vb = String(vb || '').toLowerCase();
-    if (va < vb) return sortAsc ? -1 : 1;
-    if (va > vb) return sortAsc ? 1 : -1;
-    return 0;
-  });
-}
-
-// ============================================================
-// UTILITY FUNCTIONS
-// ============================================================
 function formatCurrency(val) {
   var n = parseFloat(val);
   if (isNaN(n) || n === 0) return '—';
   return n.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €';
 }
 
-function formatPct(val) {
-  var n = parseFloat(val);
-  if (isNaN(n)) return '0%';
-  return Math.round(n) + '%';
-}
-
 function formatDays(days) {
-  if (isNaN(days)) return '—';
+  if (days === '' || days === null || days === undefined || isNaN(parseFloat(days))) return '—';
+  days = parseFloat(days);
   if (days < 0) return Math.abs(Math.round(days)) + 'd overdue';
   if (days === 0) return 'Today';
-  return Math.round(days) + 'd left';
+  return Math.round(days) + 'd';
 }
 
 function getDeadlineClass(days) {
-  if (isNaN(days)) return 'neutral';
+  if (days === '' || days === null || days === undefined || isNaN(parseFloat(days))) return 'neutral';
+  days = parseFloat(days);
   if (days < 0) return 'overdue';
   if (days <= 7) return 'urgent';
   return 'ok';
 }
 
-function escHtml(str) {
-  if (!str) return '';
-  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+function pColor(pct) {
+  if (pct === null || pct <= 0) return 'var(--border)';
+  if (pct >= 80) return 'var(--success)';
+  if (pct >= 40) return 'var(--accent)';
+  return 'var(--warning)';
 }
 
-function cssId(str) {
-  return String(str || '').replace(/[^a-zA-Z0-9]/g, '_');
-}
-
-function kpiCard(val, label) {
-  return '<div class="detail-kpi"><div class="detail-kpi-val">' + escHtml(String(val)) + '</div><div class="detail-kpi-label">' + label + '</div></div>';
-}
-
-function infoRow(label, value) {
-  return '<div class="part-info-row"><span class="part-info-label">' + label + '</span><span class="part-info-value mono">' + escHtml(String(value)) + '</span></div>';
-}
+function escH(s) { return s ? String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;') : ''; }
+function cssId(s) { return String(s||'').replace(/[^a-zA-Z0-9]/g,'_'); }
 
 function convertDriveLink(url) {
-  // Convert Google Drive share links to direct image URLs
   if (!url) return '';
-  var match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
-  if (match) return 'https://drive.google.com/thumbnail?id=' + match[1] + '&sz=w600';
-  match = url.match(/id=([a-zA-Z0-9_-]+)/);
-  if (match) return 'https://drive.google.com/thumbnail?id=' + match[1] + '&sz=w600';
+  var m = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+  if (m) return 'https://drive.google.com/thumbnail?id=' + m[1] + '&sz=w600';
+  m = url.match(/id=([a-zA-Z0-9_-]+)/);
+  if (m) return 'https://drive.google.com/thumbnail?id=' + m[1] + '&sz=w600';
   return url;
 }
 
-// ============================================================
-// CLOCK & AUTO-REFRESH
-// ============================================================
-function updateClock() {
-  var now = new Date();
-  var h = ('0' + now.getHours()).slice(-2);
-  var m = ('0' + now.getMinutes()).slice(-2);
-  var s = ('0' + now.getSeconds()).slice(-2);
-  document.getElementById('clock').textContent = h + ':' + m + ':' + s;
+function progressBarHtml(pct, label) {
+  var w = pct !== null ? Math.min(pct, 100) : 0;
+  return '<div class="progress-wrap"><div class="progress-bar-bg"><div class="progress-bar-fill" style="width:' +
+    w + '%;background:' + pColor(pct) + '"></div></div><span class="progress-pct">' + (label || '—') + '</span></div>';
 }
 
-setInterval(updateClock, 1000);
-updateClock();
+// ============ LOAD ============
+function loadWorkOrders() {
+  document.getElementById('mainTableArea').innerHTML = '<div class="loader-wrap"><div class="loader"></div><div class="loader-text">Loading…</div></div>';
+  apiCall({ action: 'getWorkOrders' }).then(function(res) {
+    if (!res.success) { document.getElementById('mainTableArea').innerHTML = '<div class="loader-wrap"><div class="loader-text" style="color:var(--danger)">Error: ' + escH(res.error) + '</div></div>'; return; }
+    allWorkOrders = res.data || [];
+    updateKPIs();
+    renderTable();
+  }).catch(function(e) {
+    document.getElementById('mainTableArea').innerHTML = '<div class="loader-wrap"><div class="loader-text" style="color:var(--danger)">' + escH(e.message) + '</div></div>';
+  });
+}
 
-// Auto-refresh every 5 minutes
-setInterval(function() {
-  loadWorkOrders();
-}, 5 * 60 * 1000);
+function updateKPIs() {
+  var n = allWorkOrders.length, ov = 0, ur = 0, tp = 0, ps = 0, pc = 0, tv = 0;
+  allWorkOrders.forEach(function(wo) {
+    var d = parseFloat(wo.daysUntilDeadline);
+    if (!isNaN(d) && d < 0) ov++;
+    if (!isNaN(d) && d >= 0 && d <= 7) ur++;
+    tp += parseInt(wo.qtyParts) || 0;
+    var p = toPercent(wo.printingProgressPct);
+    if (p !== null) { ps += p; pc++; }
+    var a = parseFloat(wo.amount);
+    if (!isNaN(a)) tv += a;
+  });
+  document.getElementById('kpiTotal').textContent = n;
+  document.getElementById('kpiOverdue').textContent = ov;
+  document.getElementById('kpiUrgent').textContent = ur;
+  document.getElementById('kpiParts').textContent = tp.toLocaleString();
+  document.getElementById('kpiAvgProgress').textContent = pc > 0 ? Math.round(ps / pc) + '%' : '—';
+  document.getElementById('kpiTotalValue').textContent = formatCurrency(tv);
+}
 
-// Initial load
+function renderTable() {
+  var data = getFilteredData();
+  sortData(data);
+  var h = '<div class="wo-table-wrap"><table class="wo-table"><thead><tr>';
+  var cols = [
+    {k:'wo',l:'Work Order'},{k:'customer',l:'Customer'},{k:'description',l:'Description'},
+    {k:'printingProgressPct',l:'Print Progress'},{k:'productionProgress',l:'Production'},
+    {k:'daysUntilDeadline',l:'Deadline'},{k:'deliveryDeadline',l:'Delivery'},
+    {k:'printingProgress',l:'Parts'},{k:'amount',l:'Amount'}
+  ];
+  cols.forEach(function(c) {
+    var s = sortCol===c.k;
+    h += '<th class="'+(s?'sorted':'')+'" onclick="toggleSort(\''+c.k+'\')">'+c.l+'<span class="sort-icon">'+(s?(sortAsc?'▲':'▼'):'⇅')+'</span></th>';
+  });
+  h += '</tr></thead><tbody>';
+  if (!data.length) h += '<tr><td colspan="9" style="text-align:center;padding:40px;color:var(--text-muted)">No work orders</td></tr>';
+
+  data.forEach(function(wo) {
+    var pp = toPercent(wo.printingProgressPct);
+    var pr = toPercent(wo.productionProgress);
+    h += '<tr onclick="openDetail(\''+escH(wo.wo)+'\')">';
+    h += '<td><span class="wo-id">'+escH(wo.wo)+'</span></td>';
+    h += '<td><span class="customer-name">'+escH(wo.customer)+'</span></td>';
+    h += '<td><span class="desc-text" title="'+escH(wo.description)+'">'+escH(wo.description)+'</span></td>';
+    h += '<td>'+progressBarHtml(pp, pp!==null?pp.toFixed(0)+'%':'—')+'</td>';
+    h += '<td>'+progressBarHtml(pr, progressLabel(wo.productionProgress))+'</td>';
+    h += '<td><span class="deadline-badge '+getDeadlineClass(wo.daysUntilDeadline)+'">'+formatDays(wo.daysUntilDeadline)+'</span></td>';
+    h += '<td><span class="date-cell">'+escH(wo.deliveryDeadline||'—')+'</span></td>';
+    h += '<td><span class="parts-cell">'+escH(wo.printingProgress||'—')+'</span></td>';
+    h += '<td><span class="amount-cell">'+formatCurrency(wo.amount)+'</span></td>';
+    h += '</tr>';
+  });
+  h += '</tbody></table></div>';
+  document.getElementById('mainTableArea').innerHTML = h;
+  document.getElementById('filterCount').textContent = data.length + ' / ' + allWorkOrders.length;
+}
+
+// ============ DETAIL ============
+function openDetail(woNum) {
+  var ov = document.getElementById('detailOverlay');
+  ov.classList.add('active');
+  document.body.style.overflow = 'hidden';
+  var wo = allWorkOrders.find(function(w){return w.wo===woNum;});
+  document.getElementById('detailWoId').textContent = woNum;
+  if (wo) {
+    var b = document.getElementById('detailDeadlineBadge');
+    b.className = 'deadline-badge '+getDeadlineClass(wo.daysUntilDeadline);
+    b.textContent = formatDays(wo.daysUntilDeadline);
+    document.getElementById('detailCustomer').textContent = wo.customer||'';
+    document.getElementById('detailMeta').innerHTML =
+      '<span><strong>Description:</strong> '+escH(wo.description)+'</span>'+
+      '<span><strong>Delivery:</strong> '+escH(wo.deliveryDeadline||'—')+'</span>'+
+      '<span><strong>Production DL:</strong> '+escH(wo.productionDeadline||'—')+'</span>'+
+      '<span><strong>Amount:</strong> '+formatCurrency(wo.amount)+'</span>';
+  }
+  document.getElementById('detailBody').innerHTML = '<div class="loader-wrap"><div class="loader"></div><div class="loader-text">Loading parts…</div></div>';
+  apiCall({action:'getWODetails',wo:woNum}).then(function(res){
+    if(!res.success){document.getElementById('detailBody').innerHTML='<div class="loader-wrap"><div class="loader-text" style="color:var(--danger)">'+escH(res.error)+'</div></div>';return;}
+    renderDetail(res.data, wo);
+  }).catch(function(){
+    document.getElementById('detailBody').innerHTML='<div class="loader-wrap"><div class="loader-text" style="color:var(--danger)">Failed to load</div></div>';
+  });
+}
+
+function renderDetail(parts, wo) {
+  var b = document.getElementById('detailBody');
+  var h = '';
+  if (wo) {
+    var pp = toPercent(wo.printingProgressPct);
+    var pr = toPercent(wo.productionProgress);
+    var sr = toPercent(wo.scrapRate);
+    h += '<div class="detail-kpis">';
+    h += kpi(wo.qtyParts,'Total Parts','');
+    h += kpi(wo.printingProgress||'—','Printed','');
+    h += kpi(pp!==null?pp.toFixed(1)+'%':'—','Print %', pp>=80?'success':pp>=40?'':'warning');
+    h += kpi(pr!==null?pr.toFixed(1)+'%':progressLabel(wo.productionProgress),'Production %', pr>=80?'success':'');
+    h += kpi(wo.qcPassed||0,'QC Passed','success');
+    h += kpi(wo.qcFailed||0,'QC Failed',(parseInt(wo.qcFailed)||0)>0?'danger':'');
+    h += kpi(sr!==null?sr.toFixed(1)+'%':'0%','Scrap Rate',sr>5?'danger':'');
+    h += '</div>';
+  }
+  h += '<div class="parts-section-title">Part Numbers <span class="count">'+parts.length+'</span></div>';
+  h += '<div class="parts-table-wrap"><table class="parts-table"><thead><tr>';
+  h += '<th>Part Number</th><th>Description</th><th>PO Qty</th><th>Launched</th><th>Printed</th><th>QC</th><th>Printing</th><th>Production</th><th>Stock</th>';
+  h += '</tr></thead><tbody>';
+  if (!parts.length) h += '<tr><td colspan="9" style="text-align:center;padding:30px;color:var(--text-muted)">No parts</td></tr>';
+
+  var pns = [];
+  parts.forEach(function(p) {
+    if (p.partNumber) pns.push(p.partNumber);
+    var pp = toPercent(p.printingProgress);
+    var pr = toPercent(p.productionProgress);
+    h += '<tr onclick="openPartModal(\''+escH(p.partNumber)+'\',\''+escH(p.description)+'\')">';
+    h += '<td><span class="pn-code">'+escH(p.partNumber)+'</span></td>';
+    h += '<td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="'+escH(p.description)+'">'+escH(p.description)+'</td>';
+    h += '<td style="text-align:center;font-family:\'JetBrains Mono\',monospace;font-size:11px">'+(p.poQty||'—')+'</td>';
+    h += '<td style="text-align:center">'+(p.qtyLaunched||0)+'</td>';
+    h += '<td style="text-align:center">'+(p.qtyPrinted||0)+'</td>';
+    h += '<td style="text-align:center">'+(p.qcPassed||0)+((parseInt(p.qcFailed)||0)>0?' / <span style="color:var(--danger)">'+p.qcFailed+'</span>':'')+'</td>';
+    h += '<td>'+progressBarHtml(pp, pp!==null?pp.toFixed(0)+'%':'—')+'</td>';
+    h += '<td><span class="progress-pct">'+progressLabel(p.productionProgress)+'</span></td>';
+    h += '<td><span class="stock-badge loading" id="stock-'+cssId(p.partNumber)+'">…</span></td>';
+    h += '</tr>';
+  });
+  h += '</tbody></table></div>';
+  b.innerHTML = h;
+
+  if (pns.length) {
+    apiCall({action:'getStockBatch',items:pns.join(',')}).then(function(res){
+      if(!res.success||!res.data) return;
+      for(var pn in res.data){
+        var el = document.getElementById('stock-'+cssId(pn));
+        if(!el) continue;
+        var q = res.data[pn];
+        if(q>0){el.className='stock-badge in-stock';el.textContent=q;}
+        else if(q===0){el.className='stock-badge no-stock';el.textContent='0';}
+        else{el.className='stock-badge no-stock';el.textContent='err';}
+      }
+    }).catch(function(){});
+  }
+}
+
+function closeDetail() { document.getElementById('detailOverlay').classList.remove('active'); document.body.style.overflow=''; }
+
+// ============ PART MODAL ============
+function openPartModal(pn,desc){
+  document.getElementById('partModalOverlay').classList.add('active');
+  document.getElementById('partModalPN').textContent=pn;
+  document.getElementById('partModalDesc').textContent=desc||'';
+  document.getElementById('partModalBody').innerHTML='<div class="loader-wrap" style="grid-column:1/-1"><div class="loader"></div><div class="loader-text">Loading from AM-101…</div></div>';
+  apiCall({action:'getPartInfo',pn:pn}).then(function(res){
+    if(!res.success||!res.data){document.getElementById('partModalBody').innerHTML='<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--text-muted)">Part not found in AM-101</div>';return;}
+    renderPart(res.data);
+  }).catch(function(){
+    document.getElementById('partModalBody').innerHTML='<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--danger)">Failed to load</div>';
+  });
+}
+
+function renderPart(d) {
+  var b = document.getElementById('partModalBody');
+  var h = '<div class="part-image-area">';
+  if(d.pictureLink){h+='<img src="'+escH(convertDriveLink(d.pictureLink))+'" alt="Part" onerror="this.outerHTML=\'<span class=no-image>Image not accessible</span>\'">';}
+  else{h+='<span class="no-image">No image available</span>';}
+  h+='</div>';
+  h+='<div class="part-info-group"><h4>Manufacturing</h4>';
+  h+=ir('Printing Time',d.printingTimeMin?d.printingTimeMin+' min':'—');
+  h+=ir('Avg Print Time',d.avgPrintingTimeMin?d.avgPrintingTimeMin+' min':'—');
+  h+=ir('Model Material',d.modelMatQty?d.modelMatQty+' cm³':'—');
+  h+=ir('Support Material',d.supportMatQty?d.supportMatQty+' cm³':'—');
+  h+=ir('Post-Processing',d.postProcessing||'—');
+  h+=ir('Release Cert.',d.releaseCert||'—');
+  h+='</div>';
+  h+='<div class="part-info-group"><h4>Design & Files</h4>';
+  h+=ir('Design Holder',d.designHolder||'—');
+  h+=ir('Drawing Nr',d.drawingNumber||'—');
+  h+=ir('Drawing Issue',d.drawingIssue||'—');
+  h+=ir('CAD File',d.cadFileRef||'—');
+  h+=ir('CAD Revision',d.cadFileRev||'—');
+  h+=ir('Capability',d.capabilityChecklist||'—');
+  if(d.printFileLinkF450) h+=lr('Print File F450',d.printFileLinkF450);
+  if(d.printFileLinkF900) h+=lr('Print File F900',d.printFileLinkF900);
+  h+='</div>';
+  b.innerHTML=h;
+}
+
+function closePartModal(){document.getElementById('partModalOverlay').classList.remove('active');}
+
+// ============ FILTER/SORT ============
+function getFilteredData() {
+  var q = document.getElementById('searchInput').value.toLowerCase().trim();
+  return allWorkOrders.filter(function(wo) {
+    if (currentFilter!=='all') {
+      var d = parseFloat(wo.daysUntilDeadline);
+      if (currentFilter==='overdue'&&(isNaN(d)||d>=0)) return false;
+      if (currentFilter==='urgent'&&(isNaN(d)||d<0||d>7)) return false;
+      if (currentFilter==='on-track'&&(isNaN(d)||d<0)) return false;
+    }
+    if (q && (wo.wo+' '+wo.customer+' '+wo.description).toLowerCase().indexOf(q)===-1) return false;
+    return true;
+  });
+}
+function setFilter(el){document.querySelectorAll('.filter-chip').forEach(function(c){c.classList.remove('active')});el.classList.add('active');currentFilter=el.getAttribute('data-filter');renderTable();}
+function filterTable(){renderTable();}
+function toggleSort(c){if(sortCol===c)sortAsc=!sortAsc;else{sortCol=c;sortAsc=true;}renderTable();}
+function sortData(d){d.sort(function(a,b){var va=a[sortCol],vb=b[sortCol];var ae=(va===''||va===null||va===undefined),be=(vb===''||vb===null||vb===undefined);if(ae&&be)return 0;if(ae)return 1;if(be)return-1;var na=parseFloat(va),nb=parseFloat(vb);if(!isNaN(na)&&!isNaN(nb))return sortAsc?na-nb:nb-na;va=String(va).toLowerCase();vb=String(vb).toLowerCase();return sortAsc?va.localeCompare(vb):vb.localeCompare(va);});}
+
+// Helpers
+function kpi(v,l,c){return '<div class="detail-kpi"><div class="detail-kpi-val '+(c||'')+'">'+escH(String(v))+'</div><div class="detail-kpi-label">'+l+'</div></div>';}
+function ir(l,v){return '<div class="part-info-row"><span class="part-info-label">'+l+'</span><span class="part-info-value mono">'+escH(String(v))+'</span></div>';}
+function lr(l,u){return '<div class="part-info-row"><span class="part-info-label">'+l+'</span><a class="part-link" href="'+escH(u)+'" target="_blank">Open →</a></div>';}
+
+// Clock + auto-refresh
+function uc(){var n=new Date();document.getElementById('clock').textContent=('0'+n.getHours()).slice(-2)+':'+('0'+n.getMinutes()).slice(-2)+':'+('0'+n.getSeconds()).slice(-2);}
+setInterval(uc,1000);uc();
+setInterval(loadWorkOrders,5*60*1000);
 loadWorkOrders();
 </script>
 </body>
