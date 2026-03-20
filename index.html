@@ -232,7 +232,7 @@ body {
   overflow: hidden;
   flex-shrink: 0;
   width: calc((100% - 24px) / 3);
-  min-width: 280px;
+  min-width: 320px;
 }
 
 .cal-month.current {
@@ -243,10 +243,9 @@ body {
 .cal-month-header {
   background: var(--navy);
   color: #fff;
-  padding: 6px 10px;
-  font-size: 11px;
+  padding: 10px 14px;
+  font-size: 13px;
   font-weight: 600;
-  text-align: center;
   letter-spacing: 0.5px;
   display: flex;
   justify-content: space-between;
@@ -261,9 +260,8 @@ body {
 
 .cal-month-header .month-total {
   font-family: 'JetBrains Mono', monospace;
-  font-weight: 500;
-  font-size: 10px;
-  opacity: 0.9;
+  font-weight: 600;
+  font-size: 12px;
 }
 
 .cal-weekdays {
@@ -274,9 +272,9 @@ body {
 }
 
 .cal-weekday {
-  padding: 3px 0;
+  padding: 6px 0;
   text-align: center;
-  font-size: 8px;
+  font-size: 10px;
   font-weight: 600;
   color: var(--text-muted);
   text-transform: uppercase;
@@ -292,10 +290,9 @@ body {
 
 .cal-day {
   background: var(--surface);
-  min-height: 40px;
-  padding: 3px 4px;
+  min-height: 56px;
+  padding: 4px 6px;
   position: relative;
-  font-size: 10px;
   cursor: default;
 }
 
@@ -309,7 +306,7 @@ body {
 .cal-day-num {
   font-weight: 500;
   color: var(--text-muted);
-  font-size: 9px;
+  font-size: 11px;
   line-height: 1;
 }
 
@@ -317,14 +314,20 @@ body {
 
 .cal-day-amount {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 7px;
+  font-size: 9px;
   font-weight: 600;
-  margin-top: 1px;
-  line-height: 1.1;
+  margin-top: 4px;
+  line-height: 1.2;
 }
 
 .cal-day-amount.future { color: var(--success); }
 .cal-day-amount.past { color: var(--danger); }
+
+.cal-day-wo-count {
+  font-size: 8px;
+  color: var(--text-muted);
+  margin-top: 1px;
+}
 
 .cal-day-bar {
   position: absolute;
@@ -337,14 +340,14 @@ body {
 .cal-day-tooltip {
   display: none;
   position: absolute;
-  bottom: calc(100% + 4px);
+  bottom: calc(100% + 6px);
   left: 50%;
   transform: translateX(-50%);
   background: var(--navy-dark);
   color: #fff;
-  padding: 8px 12px;
+  padding: 10px 14px;
   border-radius: var(--radius-sm);
-  font-size: 11px;
+  font-size: 12px;
   white-space: nowrap;
   z-index: 50;
   box-shadow: var(--shadow-lg);
@@ -357,16 +360,17 @@ body {
 .cal-day-tooltip .tt-amount {
   font-family: 'JetBrains Mono', monospace;
   font-weight: 600;
-  font-size: 12px;
+  font-size: 14px;
   color: #6EE7B7;
 }
 
 .cal-day-tooltip .tt-wos {
-  margin-top: 4px;
-  font-size: 10px;
+  margin-top: 6px;
+  font-size: 11px;
   color: rgba(255,255,255,0.7);
-  max-width: 220px;
+  max-width: 260px;
   white-space: normal;
+  line-height: 1.5;
 }
 
 .tt-wo-link {
@@ -569,6 +573,8 @@ function progressBarHtml(pct, label) {
 }
 
 // ============ REVENUE CALENDAR ============
+var calDateMap = {};
+
 function renderCalendar() {
   var grid = document.getElementById('calGrid');
   var today = new Date();
@@ -576,15 +582,15 @@ function renderCalendar() {
   var currentYear = today.getFullYear();
 
   // Build date->revenue map
-  var dateMap = {};
+  calDateMap = {};
   allWorkOrders.forEach(function(wo) {
     if (!wo.deliveryDeadline || wo.deliveryDeadline === 'TBA' || wo.deliveryDeadline === '') return;
     var amt = parseFloat(wo.amount) || 0;
     if (amt <= 0) return;
     var key = wo.deliveryDeadline;
-    if (!dateMap[key]) dateMap[key] = { amount: 0, wos: [] };
-    dateMap[key].amount += amt;
-    dateMap[key].wos.push({ wo: wo.wo, customer: wo.customer, amount: amt });
+    if (!calDateMap[key]) calDateMap[key] = { amount: 0, wos: [] };
+    calDateMap[key].amount += amt;
+    calDateMap[key].wos.push({ wo: wo.wo, customer: wo.customer, amount: amt });
   });
 
   // Months: current month through December of current year
@@ -599,8 +605,8 @@ function renderCalendar() {
 
   // Find global max revenue for bar scaling
   var globalMax = 0;
-  for (var key in dateMap) {
-    if (dateMap[key].amount > globalMax) globalMax = dateMap[key].amount;
+  for (var key in calDateMap) {
+    if (calDateMap[key].amount > globalMax) globalMax = calDateMap[key].amount;
   }
 
   months.forEach(function(monthStart) {
@@ -615,7 +621,7 @@ function renderCalendar() {
     var monthTotal = 0;
     for (var d = 1; d <= daysInMonth; d++) {
       var key = year + '-' + ('0'+(month+1)).slice(-2) + '-' + ('0'+d).slice(-2);
-      if (dateMap[key]) monthTotal += dateMap[key].amount;
+      if (calDateMap[key]) monthTotal += calDateMap[key].amount;
     }
     totalPipeline += monthTotal;
 
@@ -643,19 +649,27 @@ function renderCalendar() {
       var dateObj = new Date(year, month, d);
       var isToday = dateObj.getTime() === today.getTime();
       var isPast = dateObj < today;
-      var entry = dateMap[key];
+      var entry = calDateMap[key];
       var hasData = !!entry;
 
-      html += '<div class="cal-day' + (isToday ? ' today' : '') + (hasData ? ' has-data' : '') + '"' +
-        (hasData && entry.wos.length === 1 ? ' onclick="openDetail(\'' + escH(entry.wos[0].wo) + '\')"' : '') + '>';
+      // All days with data are clickable - single WO goes direct, multiple shows first WO
+      var clickAttr = '';
+      if (hasData) {
+        clickAttr = ' onclick="calDayClick(event, \'' + key + '\')"';
+      }
+
+      html += '<div class="cal-day' + (isToday ? ' today' : '') + (hasData ? ' has-data' : '') + '"' + clickAttr + '>';
       html += '<div class="cal-day-num">' + d + '</div>';
 
       if (entry) {
-        var barH = globalMax > 0 ? Math.max(2, Math.round(entry.amount / globalMax * 16)) : 2;
+        var barH = globalMax > 0 ? Math.max(3, Math.round(entry.amount / globalMax * 22)) : 3;
         var colorClass = isPast ? 'past' : 'future';
         var barColor = isPast ? 'var(--danger)' : 'var(--success)';
 
         html += '<div class="cal-day-amount ' + colorClass + '">' + formatCurrencyShort(entry.amount) + '</div>';
+        if (entry.wos.length > 1) {
+          html += '<div class="cal-day-wo-count">' + entry.wos.length + ' WOs</div>';
+        }
         html += '<div class="cal-day-bar" style="height:' + barH + 'px;background:' + barColor + ';opacity:0.3"></div>';
 
         html += '<div class="cal-day-tooltip">';
@@ -696,6 +710,18 @@ function formatCurrencyShort(val) {
   if (isNaN(n) || n === 0) return '—';
   if (n >= 1000) return (n / 1000).toFixed(1).replace(/\.0$/, '') + 'k €';
   return n.toFixed(0) + ' €';
+}
+
+function calDayClick(event, dateKey) {
+  var entry = calDateMap[dateKey];
+  if (!entry || !entry.wos.length) return;
+  if (entry.wos.length === 1) {
+    // Single WO - go directly to detail
+    openDetail(entry.wos[0].wo);
+  } else {
+    // Multiple WOs - let tooltip handle clicks (don't do anything on day click)
+    // Tooltip has clickable WO links
+  }
 }
 
 // ============ LOAD ============
