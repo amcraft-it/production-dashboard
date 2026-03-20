@@ -363,23 +363,19 @@ body {
 
 .cal-day-tooltip {
   display: none;
-  position: absolute;
-  bottom: calc(100% + 6px);
-  left: 50%;
-  transform: translateX(-50%);
+  position: fixed;
   background: var(--navy-dark);
   color: #fff;
   padding: 10px 14px;
   border-radius: var(--radius-sm);
   font-size: 12px;
   white-space: nowrap;
-  z-index: 50;
+  z-index: 200;
   box-shadow: var(--shadow-lg);
-  pointer-events: auto;
+  pointer-events: none;
 }
 
 .cal-day.has-data:hover .cal-day-tooltip { display: block; }
-.cal-day-tooltip:hover { display: block; }
 
 .cal-day-tooltip .tt-amount {
   font-family: 'JetBrains Mono', monospace;
@@ -744,13 +740,47 @@ function calDayClick(event, dateKey) {
   var entry = calDateMap[dateKey];
   if (!entry || !entry.wos.length) return;
   if (entry.wos.length === 1) {
-    // Single WO - go directly to detail
     openDetail(entry.wos[0].wo);
-  } else {
-    // Multiple WOs - let tooltip handle clicks (don't do anything on day click)
-    // Tooltip has clickable WO links
   }
 }
+
+// Position calendar tooltips dynamically to avoid edge clipping
+document.addEventListener('mouseover', function(e) {
+  var day = e.target.closest('.cal-day.has-data');
+  if (!day) return;
+  var tip = day.querySelector('.cal-day-tooltip');
+  if (!tip) return;
+
+  // Reset position
+  tip.style.left = '';
+  tip.style.top = '';
+  tip.style.right = '';
+  tip.style.bottom = '';
+
+  // Get rects
+  var dayRect = day.getBoundingClientRect();
+  tip.style.display = 'block';
+  var tipRect = tip.getBoundingClientRect();
+
+  var vw = window.innerWidth;
+  var vh = window.innerHeight;
+
+  // Vertical: prefer above, fall back to below
+  var top;
+  if (dayRect.top - tipRect.height - 8 > 0) {
+    top = dayRect.top - tipRect.height - 8;
+  } else {
+    top = dayRect.bottom + 8;
+  }
+
+  // Horizontal: center on day, but clamp to viewport
+  var left = dayRect.left + dayRect.width / 2 - tipRect.width / 2;
+  if (left < 8) left = 8;
+  if (left + tipRect.width > vw - 8) left = vw - tipRect.width - 8;
+
+  tip.style.left = left + 'px';
+  tip.style.top = top + 'px';
+});
 
 // ============ LOAD ============
 function loadWorkOrders() {
