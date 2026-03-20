@@ -277,7 +277,7 @@ function apiCall(params) {
   });
 }
 
-// Progress conversion: 0.154 -> 15.4, 1 -> 100, "Not Started" -> 0
+// Progress conversion: ALL numeric values are ratios (0.23 = 23%, 1 = 100%, 1.4 = 140%)
 function toPercent(val) {
   if (val === '' || val === null || val === undefined) return null;
   if (typeof val === 'string') {
@@ -289,9 +289,8 @@ function toPercent(val) {
     val = n;
   }
   if (typeof val === 'number') {
-    // Values 0-1.x are fractions, 2+ are already percentages
-    if (val >= 0 && val <= 1.001) return Math.round(val * 1000) / 10;
-    return Math.round(val * 10) / 10;
+    // ALL values are ratios: 0.23 -> 23%, 1.0 -> 100%, 1.717 -> 171.7%, 4 -> 400%
+    return Math.round(val * 1000) / 10;
   }
   return null;
 }
@@ -301,11 +300,10 @@ function progressLabel(val) {
   if (typeof val === 'string') {
     var low = val.toLowerCase();
     if (low.indexOf('not started') !== -1) return 'Not Started';
-    if (low.indexOf('complete') !== -1) return 'Complete';
+    if (low.indexOf('complete') !== -1) return '100%';
   }
   var pct = toPercent(val);
   if (pct === null) return '—';
-  if (pct >= 100) return '100%';
   return pct.toFixed(1) + '%';
 }
 
