@@ -231,7 +231,8 @@ body {
   border-radius: var(--radius-sm);
   overflow: hidden;
   flex-shrink: 0;
-  width: 220px;
+  width: calc((100% - 24px) / 3);
+  min-width: 280px;
 }
 
 .cal-month.current {
@@ -291,8 +292,8 @@ body {
 
 .cal-day {
   background: var(--surface);
-  min-height: 32px;
-  padding: 2px 3px;
+  min-height: 40px;
+  padding: 3px 4px;
   position: relative;
   font-size: 10px;
   cursor: default;
