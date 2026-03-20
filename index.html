@@ -182,17 +182,15 @@ body {
 /* --- REVENUE CALENDAR --- */
 .cal-section {
   background: var(--surface);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  padding: 20px 24px;
-  margin-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+  padding: 14px 28px 14px;
 }
 
 .cal-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 16px;
+  margin-bottom: 10px;
 }
 
 .cal-title {
@@ -215,34 +213,56 @@ body {
   color: var(--navy);
 }
 
+.cal-scroll-wrap {
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 6px;
+  scrollbar-width: thin;
+}
+
 .cal-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
+  display: flex;
+  gap: 12px;
+  min-width: max-content;
 }
 
 .cal-month {
   border: 1px solid var(--border-light);
   border-radius: var(--radius-sm);
   overflow: hidden;
+  flex-shrink: 0;
+  width: 220px;
+}
+
+.cal-month.current {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent);
 }
 
 .cal-month-header {
   background: var(--navy);
   color: #fff;
-  padding: 8px 12px;
-  font-size: 12px;
+  padding: 6px 10px;
+  font-size: 11px;
   font-weight: 600;
   text-align: center;
   letter-spacing: 0.5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
+
+.cal-month.current .cal-month-header {
+  background: var(--accent);
+}
+
+.cal-month-header .month-name { }
 
 .cal-month-header .month-total {
   font-family: 'JetBrains Mono', monospace;
-  font-weight: 400;
-  opacity: 0.8;
-  margin-left: 8px;
-  font-size: 11px;
+  font-weight: 500;
+  font-size: 10px;
+  opacity: 0.9;
 }
 
 .cal-weekdays {
@@ -253,13 +273,13 @@ body {
 }
 
 .cal-weekday {
-  padding: 4px 0;
+  padding: 3px 0;
   text-align: center;
-  font-size: 9px;
+  font-size: 8px;
   font-weight: 600;
   color: var(--text-muted);
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.3px;
 }
 
 .cal-days {
@@ -271,62 +291,47 @@ body {
 
 .cal-day {
   background: var(--surface);
-  min-height: 44px;
-  padding: 3px 4px;
+  min-height: 32px;
+  padding: 2px 3px;
   position: relative;
   font-size: 10px;
+  cursor: default;
 }
 
-.cal-day.empty {
-  background: var(--surface-alt);
-}
+.cal-day.empty { background: var(--surface-alt); }
 
-.cal-day.today {
-  background: var(--info-bg);
-}
+.cal-day.today { background: #EFF6FF; }
+
+.cal-day.has-data { cursor: pointer; }
+.cal-day.has-data:hover { background: var(--surface-hover); }
 
 .cal-day-num {
   font-weight: 500;
-  color: var(--text-secondary);
-  font-size: 10px;
+  color: var(--text-muted);
+  font-size: 9px;
   line-height: 1;
 }
 
-.cal-day.today .cal-day-num {
-  color: var(--accent);
-  font-weight: 700;
-}
+.cal-day.today .cal-day-num { color: var(--accent); font-weight: 700; }
 
-.cal-day-revenue {
+.cal-day-amount {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 8px;
+  font-size: 7px;
   font-weight: 600;
-  color: var(--success);
-  margin-top: 2px;
-  line-height: 1;
-  word-break: break-all;
+  margin-top: 1px;
+  line-height: 1.1;
 }
+
+.cal-day-amount.future { color: var(--success); }
+.cal-day-amount.past { color: var(--danger); }
 
 .cal-day-bar {
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
-  height: 3px;
-  background: var(--success);
-  opacity: 0.7;
+  border-radius: 0 0 1px 1px;
 }
-
-.cal-day-dot {
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  margin-top: 2px;
-  display: inline-block;
-}
-
-.cal-day-dot.has-revenue { background: var(--success); }
-.cal-day-dot.has-overdue { background: var(--danger); }
 
 .cal-day-tooltip {
   display: none;
@@ -340,55 +345,40 @@ body {
   border-radius: var(--radius-sm);
   font-size: 11px;
   white-space: nowrap;
-  z-index: 20;
+  z-index: 50;
   box-shadow: var(--shadow-lg);
-  pointer-events: none;
+  pointer-events: auto;
 }
 
-.cal-day:hover .cal-day-tooltip {
-  display: block;
-}
+.cal-day.has-data:hover .cal-day-tooltip { display: block; }
+.cal-day-tooltip:hover { display: block; }
 
 .cal-day-tooltip .tt-amount {
   font-family: 'JetBrains Mono', monospace;
   font-weight: 600;
   font-size: 12px;
-  color: var(--success);
+  color: #6EE7B7;
 }
 
 .cal-day-tooltip .tt-wos {
   margin-top: 4px;
   font-size: 10px;
   color: rgba(255,255,255,0.7);
-  max-width: 200px;
+  max-width: 220px;
   white-space: normal;
 }
 
-/* Week summary row */
-.cal-week-summary {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 8px 12px;
-  background: var(--surface-alt);
-  border-top: 1px solid var(--border-light);
-}
-
-.cal-week-label {
-  font-size: 10px;
-  color: var(--text-muted);
-  font-weight: 500;
-}
-
-.cal-week-amount {
+.tt-wo-link {
+  color: var(--accent-light);
+  cursor: pointer;
   font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
   font-weight: 600;
-  color: var(--navy);
+  font-size: 10px;
 }
 
-@media (max-width: 1100px) {
-  .cal-grid { grid-template-columns: 1fr; }
+.tt-wo-link:hover {
+  text-decoration: underline;
+  color: #fff;
 }
 
 
@@ -416,6 +406,17 @@ body {
 </div>
 <div class="topbar-spacer"></div>
 
+<!-- Revenue Pipeline - horizontal scroll -->
+<div class="cal-section" id="calSection">
+  <div class="cal-header">
+    <div class="cal-title">Revenue Pipeline <span class="cal-subtitle">by Delivery Deadline</span></div>
+    <div class="cal-total" id="calTotal"></div>
+  </div>
+  <div class="cal-scroll-wrap">
+    <div class="cal-grid" id="calGrid"></div>
+  </div>
+</div>
+
 <div class="kpi-bar">
   <div class="kpi-item"><div class="kpi-value" id="kpiTotal">—</div><div class="kpi-label">Open WOs</div></div>
   <div class="kpi-item"><div class="kpi-value danger" id="kpiOverdue">—</div><div class="kpi-label">Overdue</div></div>
@@ -426,15 +427,6 @@ body {
 </div>
 
 <div class="main-content">
-  <!-- Revenue Calendar -->
-  <div class="cal-section" id="calSection">
-    <div class="cal-header">
-      <div class="cal-title">Revenue Pipeline <span class="cal-subtitle">by Delivery Deadline — next 12 weeks</span></div>
-      <div class="cal-total" id="calTotal"></div>
-    </div>
-    <div class="cal-grid" id="calGrid"></div>
-  </div>
-
   <div class="filter-bar">
     <div class="search-box">
       <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1.5"/><path d="M11 11L14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
@@ -580,38 +572,45 @@ function renderCalendar() {
   var grid = document.getElementById('calGrid');
   var today = new Date();
   today.setHours(0,0,0,0);
+  var currentYear = today.getFullYear();
 
-  // Build date->revenue map from delivery deadlines
-  var dateMap = {}; // 'YYYY-MM-DD' -> { amount: N, wos: [{wo, customer, amount}] }
+  // Build date->revenue map
+  var dateMap = {};
   allWorkOrders.forEach(function(wo) {
     if (!wo.deliveryDeadline || wo.deliveryDeadline === 'TBA' || wo.deliveryDeadline === '') return;
     var amt = parseFloat(wo.amount) || 0;
     if (amt <= 0) return;
-    var key = wo.deliveryDeadline; // already 'YYYY-MM-DD'
+    var key = wo.deliveryDeadline;
     if (!dateMap[key]) dateMap[key] = { amount: 0, wos: [] };
     dateMap[key].amount += amt;
     dateMap[key].wos.push({ wo: wo.wo, customer: wo.customer, amount: amt });
   });
 
-  // Determine 3 months to show (current + next 2)
-  var startMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+  // Months: current month through December of current year
+  var startMonth = today.getMonth(); // 0-based
   var months = [];
-  for (var m = 0; m < 3; m++) {
-    var mo = new Date(startMonth.getFullYear(), startMonth.getMonth() + m, 1);
-    months.push(mo);
+  for (var m = startMonth; m <= 11; m++) {
+    months.push(new Date(currentYear, m, 1));
   }
 
   var totalPipeline = 0;
   var html = '';
 
+  // Find global max revenue for bar scaling
+  var globalMax = 0;
+  for (var key in dateMap) {
+    if (dateMap[key].amount > globalMax) globalMax = dateMap[key].amount;
+  }
+
   months.forEach(function(monthStart) {
     var year = monthStart.getFullYear();
     var month = monthStart.getMonth();
-    var monthName = monthStart.toLocaleString('en-US', { month: 'long', year: 'numeric' });
+    var monthName = monthStart.toLocaleString('en-US', { month: 'short' });
     var daysInMonth = new Date(year, month + 1, 0).getDate();
     var firstDayOfWeek = (monthStart.getDay() + 6) % 7; // Monday=0
+    var isCurrent = (month === today.getMonth() && year === today.getFullYear());
 
-    // Calculate month total
+    // Month total
     var monthTotal = 0;
     for (var d = 1; d <= daysInMonth; d++) {
       var key = year + '-' + ('0'+(month+1)).slice(-2) + '-' + ('0'+d).slice(-2);
@@ -619,31 +618,23 @@ function renderCalendar() {
     }
     totalPipeline += monthTotal;
 
-    html += '<div class="cal-month">';
-    html += '<div class="cal-month-header">' + monthName;
-    if (monthTotal > 0) html += '<span class="month-total">' + formatCurrencyShort(monthTotal) + '</span>';
+    html += '<div class="cal-month' + (isCurrent ? ' current' : '') + '">';
+    html += '<div class="cal-month-header"><span class="month-name">' + monthName + ' ' + year + '</span>';
+    html += '<span class="month-total">' + (monthTotal > 0 ? formatCurrencyShort(monthTotal) : '—') + '</span>';
     html += '</div>';
 
     // Weekday headers
     html += '<div class="cal-weekdays">';
-    ['Mo','Tu','We','Th','Fr','Sa','Su'].forEach(function(d) {
+    ['M','T','W','T','F','S','S'].forEach(function(d) {
       html += '<div class="cal-weekday">' + d + '</div>';
     });
     html += '</div>';
 
-    // Days grid
     html += '<div class="cal-days">';
 
-    // Empty cells before first day
+    // Empty cells
     for (var e = 0; e < firstDayOfWeek; e++) {
       html += '<div class="cal-day empty"></div>';
-    }
-
-    // Max revenue for this month (for bar scaling)
-    var maxRev = 0;
-    for (var d = 1; d <= daysInMonth; d++) {
-      var key = year + '-' + ('0'+(month+1)).slice(-2) + '-' + ('0'+d).slice(-2);
-      if (dateMap[key] && dateMap[key].amount > maxRev) maxRev = dateMap[key].amount;
     }
 
     for (var d = 1; d <= daysInMonth; d++) {
@@ -652,22 +643,25 @@ function renderCalendar() {
       var isToday = dateObj.getTime() === today.getTime();
       var isPast = dateObj < today;
       var entry = dateMap[key];
+      var hasData = !!entry;
 
-      html += '<div class="cal-day' + (isToday ? ' today' : '') + '">';
+      html += '<div class="cal-day' + (isToday ? ' today' : '') + (hasData ? ' has-data' : '') + '"' +
+        (hasData && entry.wos.length === 1 ? ' onclick="openDetail(\'' + escH(entry.wos[0].wo) + '\')"' : '') + '>';
       html += '<div class="cal-day-num">' + d + '</div>';
 
       if (entry) {
-        var barH = maxRev > 0 ? Math.max(3, Math.round(entry.amount / maxRev * 20)) : 3;
-        var dotClass = isPast ? 'has-overdue' : 'has-revenue';
-        html += '<div class="cal-day-dot ' + dotClass + '"></div>';
-        html += '<div style="position:absolute;bottom:0;left:0;right:0;height:' + barH + 'px;background:' + (isPast ? 'var(--danger)' : 'var(--success)') + ';opacity:0.25;border-radius:0 0 2px 2px"></div>';
+        var barH = globalMax > 0 ? Math.max(2, Math.round(entry.amount / globalMax * 16)) : 2;
+        var colorClass = isPast ? 'past' : 'future';
+        var barColor = isPast ? 'var(--danger)' : 'var(--success)';
 
-        // Tooltip
+        html += '<div class="cal-day-amount ' + colorClass + '">' + formatCurrencyShort(entry.amount) + '</div>';
+        html += '<div class="cal-day-bar" style="height:' + barH + 'px;background:' + barColor + ';opacity:0.3"></div>';
+
         html += '<div class="cal-day-tooltip">';
-        html += '<div class="tt-amount">' + formatCurrencyShort(entry.amount) + '</div>';
+        html += '<div class="tt-amount">' + formatCurrency(entry.amount) + '</div>';
         html += '<div class="tt-wos">';
         entry.wos.forEach(function(w) {
-          html += w.wo + ' · ' + escH(w.customer) + '<br>';
+          html += '<span class="tt-wo-link" onclick="event.stopPropagation();openDetail(\'' + escH(w.wo) + '\')">' + escH(w.wo) + '</span> · ' + escH(w.customer) + ' · ' + formatCurrencyShort(w.amount) + '<br>';
         });
         html += '</div></div>';
       }
@@ -675,7 +669,7 @@ function renderCalendar() {
       html += '</div>';
     }
 
-    // Fill remaining cells
+    // Fill remaining
     var totalCells = firstDayOfWeek + daysInMonth;
     var remaining = totalCells % 7 === 0 ? 0 : 7 - (totalCells % 7);
     for (var e = 0; e < remaining; e++) {
@@ -688,6 +682,12 @@ function renderCalendar() {
 
   grid.innerHTML = html;
   document.getElementById('calTotal').textContent = 'Pipeline: ' + formatCurrencyShort(totalPipeline);
+
+  // Auto-scroll to current month
+  var currentEl = grid.querySelector('.cal-month.current');
+  if (currentEl) {
+    currentEl.scrollIntoView({ inline: 'start', behavior: 'smooth', block: 'nearest' });
+  }
 }
 
 function formatCurrencyShort(val) {
