@@ -751,21 +751,12 @@ document.addEventListener('mouseover', function(e) {
   var tip = day.querySelector('.cal-day-tooltip');
   if (!tip) return;
 
-  // Reset position
-  tip.style.left = '';
-  tip.style.top = '';
-  tip.style.right = '';
-  tip.style.bottom = '';
-
-  // Get rects
-  var dayRect = day.getBoundingClientRect();
   tip.style.display = 'block';
+
+  var dayRect = day.getBoundingClientRect();
   var tipRect = tip.getBoundingClientRect();
-
   var vw = window.innerWidth;
-  var vh = window.innerHeight;
 
-  // Vertical: prefer above, fall back to below
   var top;
   if (dayRect.top - tipRect.height - 8 > 0) {
     top = dayRect.top - tipRect.height - 8;
@@ -773,13 +764,21 @@ document.addEventListener('mouseover', function(e) {
     top = dayRect.bottom + 8;
   }
 
-  // Horizontal: center on day, but clamp to viewport
   var left = dayRect.left + dayRect.width / 2 - tipRect.width / 2;
   if (left < 8) left = 8;
   if (left + tipRect.width > vw - 8) left = vw - tipRect.width - 8;
 
   tip.style.left = left + 'px';
   tip.style.top = top + 'px';
+});
+
+document.addEventListener('mouseout', function(e) {
+  var day = e.target.closest('.cal-day.has-data');
+  if (!day) return;
+  var related = e.relatedTarget;
+  if (related && (day.contains(related))) return;
+  var tip = day.querySelector('.cal-day-tooltip');
+  if (tip) tip.style.display = 'none';
 });
 
 // ============ LOAD ============
